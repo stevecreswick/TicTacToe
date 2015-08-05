@@ -4,6 +4,33 @@ body {
 
 h1 {
   color: #4682B4;
+}
 
+.container {
+  width: 50%;
+  height: 50%;
+}
 
+.box {
+  border: 1px solid grey;
+  height: 6em;
+  width: 20%;
+  display: inline-block;
+  background: white;
+  margin-left: -4px;
+}
+
+.top-row {
+
+}
+
+.middle-row {
+}
+
+.bottom-row {
+
+}
+
+.top-row .column-one{
+  background: blue;
 }

@@ -37,7 +37,21 @@ TicTacToe.prototype.clearBoard = function clearBoard(){
   ]
 };
 
+//Is there a way to use map to bind a click to all pieces?
+TicTacToe.prototype.bindBox = function bindClick(row, col) {
+  currentNode = $(row + " " + col);
+  playerPiece = this.turn;
+  currentNode.on('click', function(){
+    currentNode.text(playerPiece);
+  });
+}
+
+
+
+
+
 var game = new TicTacToe(gameboard);
+game.bindClick('.top-row', '.column-one');
 game.placePiece(0,0);
 game.placePiece(2,2);
 console.log(gameboard[0]);
