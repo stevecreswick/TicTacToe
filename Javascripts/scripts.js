@@ -27,6 +27,7 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
     gameboard[row][col] = 'O';
     this.turn = 'X';
   }
+  return gameboard;
 }
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
@@ -34,19 +35,90 @@ TicTacToe.prototype.clearBoard = function clearBoard(){
     [null, null, null],   //gameboard[0]
     [null, null, null],   //gameboard[1]
     [null, null, null]    //gameboard[2]
-  ]
+  ];
+  return gameboard;
 };
 
 //Is there a way to use map to bind a click to all pieces?
-TicTacToe.prototype.bindBox = function bindBox(row, col) {
-  currentNode = $(row + " " + col);
-  console.log(currentNode);
-  playerPiece = this.turn;
-  currentNode.on('click', function(){
-    currentNode.text(playerPiece);
+TicTacToe.prototype.bindBox = function bindBox(boxNode) {
+  boxNode.on('click', function(){
+
+    boxNode.text('X');
+    //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
   });
-  return currentNode;
+  return boxNode;
 };
+
+//renders board and binds a click
+TicTacToe.prototype.renderBoard = function renderBoard() {
+
+  //create board
+  var board = $('<div>').addClass('board');
+
+  //create top row and boxes
+  //add a click event listener to each box
+  //append boxes
+  var topRow = $('<div>').addClass('row top-row');
+  var columnOneTop = $('<div>').addClass('box column-one');
+  this.bindBox(columnOneTop);
+  var columnTwoTop = $('<div>').addClass('box column-two');
+  this.bindBox(columnTwoTop);
+  var columnThreeTop = $('<div>').addClass('box column-three');
+  this.bindBox(columnThreeTop);
+  topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
+
+
+  //create middle row and boxes
+  //add a click event listener to each box
+  //append boxes
+  var middleRow = $('<div>').addClass('row middle-row');
+  var columnOneMid = $('<div>').addClass('box column-one');
+  this.bindBox(columnOneMid);
+  var columnTwoMid = $('<div>').addClass('box column-two');
+  this.bindBox(columnTwoMid);
+  var columnThreeMid = $('<div>').addClass('box column-three');
+  this.bindBox(columnThreeMid);
+  middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
+
+
+  //create bottom row and boxes
+  //add a click event listener to each box
+  //append boxes
+  var bottomRow = $('<div>').addClass('row top-row');
+  var columnOneBot = $('<div>').addClass('box column-one');
+  this.bindBox(columnOneBot);
+  var columnTwoBot = $('<div>').addClass('box column-two');
+  this.bindBox(columnTwoBot);
+  var columnThreeBot = $('<div>').addClass('box column-three');
+  this.bindBox(columnThreeBot);
+  bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
+
+  board.append(topRow, middleRow, bottomRow);
+
+
+  return $('body').append(board);
+}
+
+
+//bind the whole board
+
+/*
+TicTacToe.prototype.bindBoard = function bindBoard() {
+  var board = $('.board');
+  var rows = ['.top-row', '.middle-row', '.bottom-row'];
+  var columns = ['.column-one', '.column-two', '.column-three'];
+
+  for (var row = 0; row < rows.length; row++) {
+    for (var col = 0; col < columns.length; col++) {
+      var currentNode = rows[row], columns[col];
+      this.bindBox(rows[row], columns[col]);
+    }
+  }
+  return board;
+}
+*/
+
+//connect real board with gameboard
 
 
 var game = new TicTacToe(gameboard);
@@ -68,5 +140,7 @@ $(document).ready(function(){
 
 
 function init(){
-  game.bindBox('.top-row', '.column-one');
+  game.renderBoard();
+  //game.bindBox('.top-row', '.column-one');
+  //game.bindBoard();
 }

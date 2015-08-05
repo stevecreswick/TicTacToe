@@ -6,7 +6,12 @@ h1 {
   color: #4682B4;
 }
 
-.container {
+p {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.board {
   width: 50%;
   height: 50%;
 }
@@ -17,7 +22,7 @@ h1 {
   width: 20%;
   display: inline-block;
   background: white;
-  margin-left: -4px;
+  margin-left: -2px;
 }
 
 .top-row {
@@ -32,5 +37,5 @@ h1 {
 }
 
 .top-row .column-one{
-  background: blue;
+
 }
