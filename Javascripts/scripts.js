@@ -1,5 +1,40 @@
 console.log('...loaded');
 
+//             <------ Player Constructor ------>
+
+function Player(name, piece){
+  this.name = name;
+  this.piece = piece;
+  this.canClick = true;
+}
+
+
+
+
+
+//       <----- Tic Tace Toe Game Constructor ------>
+
+function TicTacToe(gameboard, numOfGames, playerOne, playerTwo){
+  this.active = true;
+  this.gameboard = gameboard;
+
+  //change to the Player's Image
+  this.turn = 'X'
+
+
+  //Not Used Yet
+  this.turnsleft = 9;
+  this.bestOF = numOfGames;
+
+}
+
+
+//             <---- Tic Tac Toe Protytype Functions ----->
+
+
+//    -------- Logic ---------
+
+  //Nested Array used to test for winning
 
 var gameboard = [
   [null, null, null],   //gameboard[0]
@@ -8,16 +43,6 @@ var gameboard = [
 ]
 
 console.log(gameboard);
-
-function TicTacToe(gameboard){
-  this.active = true;
-  this.turnsleft = 9;
-  this.turn = 'X'
-
-  this.gameboard = gameboard;
-
-
-}
 
 TicTacToe.prototype.placePiece = function placePiece(row, col){
   if (this.turn === 'X'){
@@ -30,6 +55,7 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
   return gameboard;
 }
 
+
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
     [null, null, null],   //gameboard[0]
@@ -39,25 +65,27 @@ TicTacToe.prototype.clearBoard = function clearBoard(){
   return gameboard;
 };
 
-//Is there a way to use map to bind a click to all pieces?
-TicTacToe.prototype.bindBox = function bindBox(boxNode) {
-  boxNode.on('click', function(){
 
-    boxNode.text('X');
-    //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
-  });
-  return boxNode;
+TicTacToe.prototype.checkWinner = function clearWinner(){
+
 };
 
-//renders board and binds a click
+
+
+
+
+
+//----------------- Graphics & Rendering ----------------
+
+
+// Render Board
+  //Uses .bindBox()
+
 TicTacToe.prototype.renderBoard = function renderBoard() {
 
-  //create board
   var board = $('<div>').addClass('board');
 
-  //create top row and boxes
-  //add a click event listener to each box
-  //append boxes
+  //Top Row
   var topRow = $('<div>').addClass('row top-row');
   var columnOneTop = $('<div>').addClass('box column-one');
   this.bindBox(columnOneTop);
@@ -67,10 +95,7 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
   this.bindBox(columnThreeTop);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
-
-  //create middle row and boxes
-  //add a click event listener to each box
-  //append boxes
+  //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
   var columnOneMid = $('<div>').addClass('box column-one');
   this.bindBox(columnOneMid);
@@ -80,10 +105,7 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
   this.bindBox(columnThreeMid);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
-
-  //create bottom row and boxes
-  //add a click event listener to each box
-  //append boxes
+  //Bottom Row
   var bottomRow = $('<div>').addClass('row top-row');
   var columnOneBot = $('<div>').addClass('box column-one');
   this.bindBox(columnOneBot);
@@ -95,30 +117,78 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
 
   board.append(topRow, middleRow, bottomRow);
 
-
   return $('body').append(board);
 }
 
 
-//bind the whole board
+// Binding Button
+  // Used in the .renderBoard() function
 
-/*
-TicTacToe.prototype.bindBoard = function bindBoard() {
-  var board = $('.board');
-  var rows = ['.top-row', '.middle-row', '.bottom-row'];
-  var columns = ['.column-one', '.column-two', '.column-three'];
+TicTacToe.prototype.bindBox = function bindBox(boxNode) {
+  boxNode.on('click', function(){
 
-  for (var row = 0; row < rows.length; row++) {
-    for (var col = 0; col < columns.length; col++) {
-      var currentNode = rows[row], columns[col];
-      this.bindBox(rows[row], columns[col]);
-    }
+    boxNode.text('X');
+    //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
+  });
+  return boxNode;
+};
+
+
+//   -------   Interactions & Gameplay   --------
+
+
+TicTacToe.prototype.makeMove = function makeMove(player){
+  //Has to Use Place Piece to connect to logic
+
+
+};
+
+
+//TEST
+TicTacToe.prototype.toggleClicking = function toggleClicking(player){
+
+
+  if (player.canClick === true){
+  player.canClick=false;
   }
-  return board;
-}
-*/
+  else if (player.canClick === false){
+  player.canClick=true;
+  }
 
-//connect real board with gameboard
+  return player;
+
+};
+
+
+
+
+
+//   --- --- --- Menu --- --- ---
+
+
+// Start Menu
+  //signIn
+    //radio button
+  //logout
+
+
+  // Choose Icon
+
+
+
+
+//Game Over Menu
+
+  //Restart - Enter Best Of
+
+
+
+
+
+//                    <---   Testing & Launch   --->
+
+
+//   -------  Testing  ---------
 
 
 var game = new TicTacToe(gameboard);
@@ -132,6 +202,12 @@ console.log(gameboard[0]);
 console.log(gameboard[1]);
 console.log(gameboard[2]);
 
+
+
+
+
+
+///  --- ---  INITIALIZE ON LOAD  --- ---
 
 
 $(document).ready(function(){
