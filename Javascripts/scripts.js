@@ -6,7 +6,7 @@ function Player(name, piece, color){
   this.name = name || 'Unnamed Player';
   this.piece = piece;
   this.color = color;
-
+  this.winner = false;
   this.canClick = true;
 }
 
@@ -22,7 +22,7 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   this.playerOne = playerOne;
   this.playerTwo = playerTwo;
   this.turn = this.playerOne;
-  this.piece =
+  //this.piece =
 
 
   //Not Used Yet
@@ -40,9 +40,9 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   //Nested Array used to test for winning
 
 var gameboard = [
-  [null, null, null],   //gameboard[0]
-  [null, null, null],   //gameboard[1]
-  [null, null, null]    //gameboard[2]
+  [0, 1, 0],   //gameboard[0]
+  [0, 1, 0],   //gameboard[1]
+  [0, 1, 0]    //gameboard[2]
 ]
 
 console.log(gameboard);
@@ -61,17 +61,73 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
-    [null, null, null],   //gameboard[0]
-    [null, null, null],   //gameboard[1]
-    [null, null, null]    //gameboard[2]
+    [0, 0, 0],   //gameboard[0]
+    [0, 0, 0],   //gameboard[1]
+    [0, 0, 0]    //gameboard[2]
   ];
   return gameboard;
 };
 
 
-TicTacToe.prototype.checkWinner = function clearWinner(){
+TicTacToe.prototype.checkWinner = function checkWinner(){
+    //function: row check - DONE
+    //function: column check - DONE
+    //function: diagonal-bottom
+    //function: diagonal-top
 
+}
+
+
+TicTacToe.prototype.rowChecker = function rowChecker(){
+  var rowSum = 0;
+
+  //update array length to something scaleable
+  for (var r = 0; r < 3; r++) {
+      rowSum = 0;
+      for (var c = 0; c < 3; c++) {
+        rowSum += this.gameboard[r][c];
+
+        if  (rowSum === 3) {
+          this.playerOne.winner = true;
+          console.log(this.playerOne.name + " wins in row " + r);
+        }
+        else if (rowSum === -3) {
+          this.playerTwo.winner = true;
+          console.log(this.playerTwo.name + " wins in row " + r)
+        }
+      }
+
+  }
 };
+
+TicTacToe.prototype.columnChecker = function columnChecker(){
+  var colSum = 0;
+
+  for (var c = 0; c < 3; c++) {
+    colSum = 0;
+      for (var r = 0; r < 3; r++) {
+        colSum += this.gameboard[r][c];
+        console.log(colSum);
+        if  (colSum === 3) {
+          this.playerOne.winner = true;
+          console.log(this.playerOne.name + " wins in column " + c);
+        }
+        else if (colSum === -3) {
+          this.playerTwo.winner = true;
+          console.log(this.playerOne.name + " wins in column " + c)
+        }
+      }
+}
+};
+
+
+
+  //update array length to something scaleable
+
+
+
+
+
 
 
 
@@ -130,6 +186,7 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
 TicTacToe.prototype.bindBox = function bindBox(boxNode) {
   var scope = this;
 
+
   boxNode.on('click', function(){
 
     //console.log(boxNode.class)
@@ -137,6 +194,7 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
     scope.colorBoxOnClick(boxNode);
     scope.togglePlayerTurn();
     scope.getClass(boxNode);
+
     //boxNode.css({'backgroundColor': this.turn.color});
 
     //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
@@ -158,11 +216,12 @@ TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
 TicTacToe.prototype.togglePlayerTurn = function togglePlayerTurn() {
   if (this.turn.name == this.playerOne.name) {
       this.turn = this.playerTwo;
-      console.log(this.turn);
+      console.log(this.turn.name);
   } else if (this.turn.name == this.playerTwo.name) {
       this.turn = this.playerOne;
-      console.log(this.turn);
+      console.log(this.turn.name);
   }
+  return this;
 
 };
 
@@ -170,48 +229,48 @@ TicTacToe.prototype.getClass = function getClass(clickedNode) {
   var coordinates = [
     ['.top-row', '.middle-row', '.bottom-row'],
     ['.column-one', '.column-two', '.column-three']
-];
-
+  ];
   var row = coordinates[0];
   var col = coordinates[1];
   var testRow;
   var testCol;
   var boxId;
 
-
-
+  //Loop through rows
     for (var i = 0; i < row.length; i++) {
 
+      //Loop through columns
       for (var x = 0; x < col.length; x++) {
           testRow = row[i];
           testCol = col[x];
 
           boxId = (testRow + " " + testCol);
 
-
+          //if the boxId is equal to that of the clickedNode, return that Node
           if ( clickedNode.is(boxId) ) {
-            console.log('Yay....I am working!!!')
-            console.log("columnID: " + boxId);
+
+            return boxId;
 
           }
-
       }
-
-
-
     }
 
 
-return boxId;
-  //TEST STATEMENT:
-    //return a string of the the row class and column class for validation
 
 }
 
-TicTacToe.prototype.convertClassToIndex = function convertClassToIndex() {
+TicTacToe.prototype.convertClassToIndex = function convertClassToIndex(boxId) {
+
+  console.log(boxId.split(""));
+  //I can split the string ("")
+      //switch ( boxId.indexOf(.top-row) >= 0 & (boxId.indexOf(.column-one) >= 0)
 
   //this should return a [row][col]
   //this should feed the row and column into a new bind logic function
+
+  //TEST Statement
+    //if the top-left box is clicked this should return this.gameboard[0][0]
+    //if the bottom-right box is clicked, this should return this.gameboard[2][2];
 }
 
 
@@ -220,6 +279,9 @@ TicTacToe.prototype.convertClassToIndex = function convertClassToIndex() {
 
 //make clicked boxes innactive (accepts CLICKED NODE)
   // .toggleClass(.clicked);
+
+
+
 
 //TEST
 
@@ -266,30 +328,24 @@ TicTacToe.prototype.toggleClicking = function toggleClicking(player){
 
 //   -------  Testing  ---------
 
-var testPlayer1 = new Player('Steve', 'X', 'blue');
-var testPlayer2 = new Player('Kathew', 'O', 'red');
+var testPlayer1 = new Player('Steve', 1, 'blue');
+var testPlayer2 = new Player('Kathew', -1, 'red');
 
 console.log(testPlayer1);
 console.log(testPlayer2);
 
 
 var game = new TicTacToe(gameboard, testPlayer1, testPlayer2);
-game.placePiece(0,0);
-game.placePiece(2,2);
-console.log(gameboard[0]);
-console.log(gameboard[1]);
-console.log(gameboard[2]);
-game.clearBoard();
-console.log(gameboard[0]);
-console.log(gameboard[1]);
-console.log(gameboard[2]);
+//game.placePiece(0,0);
+//game.placePiece(2,2);
 
 
 
 
 
 
-///  --- ---  INITIALIZE ON LOAD  --- ---
+
+//  --- ---  INITIALIZE ON LOAD  --- ---
 
 
 $(document).ready(function(){
