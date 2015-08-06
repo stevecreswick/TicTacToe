@@ -21,7 +21,8 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   this.gameboard = gameboard;
   this.playerOne = playerOne;
   this.playerTwo = playerTwo;
-  this.turn = this.playerOne.name;
+  this.turn = this.playerOne;
+  this.piece =
 
 
   //Not Used Yet
@@ -127,9 +128,15 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
   // Used in the .renderBoard() function
 
 TicTacToe.prototype.bindBox = function bindBox(boxNode) {
+  var scope = this;
+
   boxNode.on('click', function(){
 
-    boxNode.text('X');
+    //console.log(this.turn);
+    scope.colorBoxOnClick(boxNode);
+    scope.togglePlayerTurn();
+    //boxNode.css({'backgroundColor': this.turn.color});
+
     //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
   });
   return boxNode;
@@ -139,17 +146,31 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
 //   -------   Interactions & Gameplay   --------
 
 
-TicTacToe.prototype.makeMove = function makeMove(player){
+TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
+
   //Has to use .placePiece() to connect to logic
+  boxNode.css({'backgroundColor': this.turn.color});
 
 
 };
 
-//TicTacToe.prototype.switchMove = function switchMove {}
-// Determine which color the click should make the background and toggle this.turn
+TicTacToe.prototype.togglePlayerTurn = function togglePlayerTurn() {
+  if (this.turn.name == this.playerOne.name) {
+      this.turn = this.playerTwo;
+      console.log(this.turn);
+  } else if (this.turn.name == this.playerTwo.name) {
+      this.turn = this.playerOne;
+      console.log(this.turn);
+  }
 
+};
+
+
+//  bind to logic 
 
 //TEST
+
+/*
 TicTacToe.prototype.toggleClicking = function toggleClicking(player){
 
 
@@ -166,7 +187,7 @@ TicTacToe.prototype.toggleClicking = function toggleClicking(player){
   return player;
 
 };
-
+*/
 
 
 
