@@ -2,9 +2,11 @@ console.log('...loaded');
 
 //             <------ Player Constructor ------>
 
-function Player(name, piece){
-  this.name = name;
+function Player(name, piece, color){
+  this.name = name || 'Unnamed Player';
   this.piece = piece;
+  this.color = color;
+
   this.canClick = true;
 }
 
@@ -14,17 +16,17 @@ function Player(name, piece){
 
 //       <----- Tic Tace Toe Game Constructor ------>
 
-function TicTacToe(gameboard, numOfGames, playerOne, playerTwo){
+function TicTacToe(gameboard, playerOne, playerTwo){
   this.active = true;
   this.gameboard = gameboard;
-
-  //change to the Player's Image
-  this.turn = 'X'
+  this.playerOne = playerOne;
+  this.playerTwo = playerTwo;
+  this.turn = this.playerOne.name;
 
 
   //Not Used Yet
   this.turnsleft = 9;
-  this.bestOF = numOfGames;
+  //this.bestOF = numOfGames;
 
 }
 
@@ -138,10 +140,13 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
 
 
 TicTacToe.prototype.makeMove = function makeMove(player){
-  //Has to Use Place Piece to connect to logic
+  //Has to use .placePiece() to connect to logic
 
 
 };
+
+//TicTacToe.prototype.switchMove = function switchMove {}
+// Determine which color the click should make the background and toggle this.turn
 
 
 //TEST
@@ -150,8 +155,11 @@ TicTacToe.prototype.toggleClicking = function toggleClicking(player){
 
   if (player.canClick === true){
   player.canClick=false;
+  console.log(player.canClick);
   }
   else if (player.canClick === false){
+    console.log(player.canClick);
+
   player.canClick=true;
   }
 
@@ -162,19 +170,13 @@ TicTacToe.prototype.toggleClicking = function toggleClicking(player){
 
 
 
-
 //   --- --- --- Menu --- --- ---
 
 
 // Start Menu
-  //signIn
-    //radio button
-  //logout
-
-
-  // Choose Icon
-
-
+  //Funcion: signIn
+    //radio button for piece/icon
+  //Function: logout
 
 
 //Game Over Menu
@@ -190,8 +192,14 @@ TicTacToe.prototype.toggleClicking = function toggleClicking(player){
 
 //   -------  Testing  ---------
 
+var testPlayer1 = new Player('Steve', 'X', 'blue');
+var testPlayer2 = new Player('Kathew', 'O', 'red');
 
-var game = new TicTacToe(gameboard);
+console.log(testPlayer1);
+console.log(testPlayer2);
+
+
+var game = new TicTacToe(gameboard, testPlayer1, testPlayer2);
 game.placePiece(0,0);
 game.placePiece(2,2);
 console.log(gameboard[0]);

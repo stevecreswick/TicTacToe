@@ -19,7 +19,11 @@ h1 {
   width: 20%;
   display: inline-block;
   background: white;
-  margin-left: -2px;
+  margin-left: 0px;
+}
+
+.box:hover {
+  background: lightgrey;
 }
 
 .top-row {
