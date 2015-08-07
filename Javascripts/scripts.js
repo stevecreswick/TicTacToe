@@ -166,31 +166,31 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
 
   //Top Row
   var topRow = $('<div>').addClass('row top-row');
-  var columnOneTop = $('<div>').addClass('box top-row column-one');
+  var columnOneTop = $('<div>').addClass('box top-row column-one').attr('row', 0).attr('col', 0);
   this.bindBox(columnOneTop);
-  var columnTwoTop = $('<div>').addClass('box top-row column-two');
+  var columnTwoTop = $('<div>').addClass('box top-row column-two').attr('row', 0).attr('col', 1);
   this.bindBox(columnTwoTop);
-  var columnThreeTop = $('<div>').addClass('box top-row column-three');
+  var columnThreeTop = $('<div>').addClass('box top-row column-three').attr('row', 0).attr('col', 2);
   this.bindBox(columnThreeTop);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box middle-row column-one');
+  var columnOneMid = $('<div>').addClass('box middle-row column-one').attr('row', 1).attr('col', 0);
   this.bindBox(columnOneMid);
-  var columnTwoMid = $('<div>').addClass('box middle-row column-two');
+  var columnTwoMid = $('<div>').addClass('box middle-row column-two').attr('row', 1).attr('col', 1);
   this.bindBox(columnTwoMid);
-  var columnThreeMid = $('<div>').addClass('box middle-row column-three');
+  var columnThreeMid = $('<div>').addClass('box middle-row column-three').attr('row', 1).attr('col', 2);
   this.bindBox(columnThreeMid);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
   //Bottom Row
   var bottomRow = $('<div>').addClass('row bottom-row');
-  var columnOneBot = $('<div>').addClass('box bottom-row column-one');
+  var columnOneBot = $('<div>').addClass('box bottom-row column-one').attr('row', 2).attr('col', 0);
   this.bindBox(columnOneBot);
-  var columnTwoBot = $('<div>').addClass('box bottom-row column-two');
+  var columnTwoBot = $('<div>').addClass('box bottom-row column-two').attr('row', 2).attr('col', 1);
   this.bindBox(columnTwoBot);
-  var columnThreeBot = $('<div>').addClass('box bottom-row column-three');
+  var columnThreeBot = $('<div>').addClass('box bottom-row column-three').attr('row', 2).attr('col', 2);
   this.bindBox(columnThreeBot);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
@@ -207,17 +207,27 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
   var scope = this;
 
   boxNode.on('click', function(e){
-      /*
+
       var square = $(e.target);
       var index = [
-        square.attr('row'),
-        square.attr('col')
+        parseInt(square.attr('row')),
+        parseInt(square.attr('col'))
       ];
-      */
-      scope.playerTurn(boxNode);
 
+      if (scope.gameboard[index[0]][index[1]] === 0){
+        scope.mapToArray(index[0],index[1]);
+        scope.playerTurn(boxNode);
+      } else {
+        console.log('You cannot make this move.');
+      }
   });
   return boxNode;
+};
+
+
+TicTacToe.prototype.mapToArray = function mapToArray(row, col){
+  this.gameboard[row][col] = this.turn.piece;
+  console.log(this.gameboard[row]);
 };
 
 
@@ -226,12 +236,11 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
 
 TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
 
-  
+
   this.colorBoxOnClick(boxNode);
   this.togglePlayerTurn();
 
-  var boxId = this.getClass(boxNode);
-  this.mapMoveToBoard(boxId);
+
 
 };
 
@@ -240,8 +249,8 @@ TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
 
   boxNode.css({'backgroundColor': this.turn.color});
 
-
 };
+
 
 TicTacToe.prototype.togglePlayerTurn = function togglePlayerTurn() {
   if (this.turn.name == this.playerOne.name) {
@@ -255,92 +264,6 @@ TicTacToe.prototype.togglePlayerTurn = function togglePlayerTurn() {
 
 };
 
-TicTacToe.prototype.getClass = function getClass(clickedNode) {
-  var coordinates = [
-    ['.top-row', '.middle-row', '.bottom-row'],
-    ['.column-one', '.column-two', '.column-three']
-  ];
-  var row = coordinates[0];
-  var col = coordinates[1];
-  var testRow;
-  var testCol;
-  var boxId;
-
-  //Loop through rows
-    for (var i = 0; i < row.length; i++) {
-
-      //Loop through columns
-      for (var x = 0; x < col.length; x++) {
-          testRow = row[i];
-          testCol = col[x];
-
-          boxId = (testRow + " " + testCol);
-
-          //if the boxId is equal to that of the clickedNode, return that Node
-          if ( clickedNode.is(boxId) ) {
-
-            return boxId;
-          }
-      }
-    }
-};
-
-TicTacToe.prototype.mapMoveToBoard = function mapMoveToBoard(boxId){
-
-switch (boxId) {
-  case ('.top-row .column-one'):
-  this.gameboard[0][0] = this.turn.piece;
-  break;
-  case ('.top-row .column-two'):
-  this.gameboard[0][1] = this.turn.piece;
-  break;
-  case ('.top-row .column-three'):
-  this.gameboard[0][2] = this.turn.piece;
-  break;
-  case ('.middle-row .column-one'):
-  this.gameboard[1][0] = this.turn.piece;
-  break;
-  case ('.middle-row .column-two'):
-  this.gameboard[1][1] = this.turn.piece;
-  break;
-  case ('.middle-row .column-three'):
-  this.gameboard[1][2] = this.turn.piece;
-  break;
-  case ('.bottom-row .column-one'):
-  this.gameboard[2][0] = this.turn.piece;
-  break;
-  case ('.bottom-row .column-two'):
-  this.gameboard[2][1] = this.turn.piece;
-  break;
-  case ('.bottom-row .column-three'):
-  this.gameboard[2][2] = this.turn.piece;
-  break;
-  default:
-  console.log('Keep Trying...');
-}
-
-};
-
-TicTacToe.prototype.convertClassToIndex = function convertClassToIndex(boxId) {
-
-  console.log(boxId.split(""));
-  //I can split the string ("")
-      //switch ( boxId.indexOf(.top-row) >= 0 & (boxId.indexOf(.column-one) >= 0)
-
-  //this should return a [row][col]
-  //this should feed the row and column into a new bind logic function
-
-  //TEST Statement
-    //if the top-left box is clicked this should return this.gameboard[0][0]
-    //if the bottom-right box is clicked, this should return this.gameboard[2][2];
-}
-
-
-//  bind to logic
-//Has to use .placePiece() to connect to logic
-
-//make clicked boxes innactive (accepts CLICKED NODE)
-  // .toggleClass(.clicked);
 
 
 
