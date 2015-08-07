@@ -6,41 +6,42 @@ h1 {
   color: #4682B4;
 }
 
+#universe {
+  width: 50%;
+  height: 50%;
 
+}
 
 .board {
   width: 50%;
   height: 50%;
+  display: inline-block;
 }
 
 .box {
   border: 1px solid grey;
-  height: 6em;
-  width: 20%;
+  height: 2em;
+  width: 33%;
   display: inline-block;
-  background: white;
-  margin-left: 0px;
+  background: yellow;
+  margin-left: 3px;
 }
 
 .box:hover {
   background: lightgrey;
 }
 
-.top-row {
+.board .row {
 
 }
-
-.middle-row {
+.board .top-row {
+  width: 100%;
 }
 
-.bottom-row {
-
+.board .middle-row {
+  width: 100%;
 }
 
-.top-row .column-one{
-
-}
-
-.isClicked {
-
+.board .bottom-row {
+  width: 100%;
 }
