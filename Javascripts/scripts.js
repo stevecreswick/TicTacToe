@@ -45,8 +45,7 @@ var gameboard = [
   [0, 0, 0]    //gameboard[2]
 ]
 
-console.log(gameboard);
-
+/*
 TicTacToe.prototype.placePiece = function placePiece(row, col){
   if (this.turn === 'X'){
     gameboard[row][col] = 'X';
@@ -57,7 +56,7 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
   }
   return gameboard;
 }
-
+*/
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
@@ -70,11 +69,14 @@ TicTacToe.prototype.clearBoard = function clearBoard(){
 
 
 TicTacToe.prototype.checkWinner = function checkWinner(){
-    //function: row check - DONE
-    //function: column check - DONE
-    //function: diagonal-bottom
-    //function: diagonal-top
 
+    this.rowChecker();
+    this.columnChecker();
+    this.diagonalBottomChecker();
+    this.diagonalTopChecker();
+
+    console.log('Is player one a winner? ' + this.playerOne.winner);
+    console.log('Is player two a winner? ' + this.playerTwo.winner);
 }
 
 
@@ -89,11 +91,9 @@ TicTacToe.prototype.rowChecker = function rowChecker(){
 
         if  (rowSum === 3) {
           this.playerOne.winner = true;
-          console.log(this.playerOne.name + " wins in row " + r);
         }
         else if (rowSum === -3) {
           this.playerTwo.winner = true;
-          console.log(this.playerTwo.name + " wins in row " + r)
         }
       }
 
@@ -110,11 +110,9 @@ TicTacToe.prototype.columnChecker = function columnChecker(){
         console.log(colSum);
         if  (colSum === 3) {
           this.playerOne.winner = true;
-          console.log(this.playerOne.name + " wins in column " + c);
         }
         else if (colSum === -3) {
           this.playerTwo.winner = true;
-          console.log(this.playerTwo.name + " wins in column " + c);
         }
       }
 }
@@ -130,11 +128,9 @@ TicTacToe.prototype.diagonalBottomChecker = function diagonalBottomChecker(){
 
       if  (diagonalSum === 3) {
         this.playerOne.winner = true;
-        console.log(this.playerOne.name + " wins in diagonalBotom " + c);
       }
       else if (diagonalSum === -3) {
         this.playerTwo.winner = true;
-        console.log(this.playerTwo.name + " wins in diagonalBottom " + c);
       }
     }
 };
@@ -146,12 +142,9 @@ TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
       diagonalSum += this.gameboard[i][i];
       if  (diagonalSum === 3) {
         this.playerOne.winner = true;
-        console.log(diagonalSum);
-        console.log(this.playerOne.name + " wins from diagonalTop ");
       }
       else if (diagonalSum === -3) {
         this.playerTwo.winner = true;
-        console.log(this.playerTwo.name + " wins from diagonalTop ");
       }
 }
 };
@@ -213,19 +206,16 @@ TicTacToe.prototype.renderBoard = function renderBoard() {
 TicTacToe.prototype.bindBox = function bindBox(boxNode) {
   var scope = this;
 
+  boxNode.on('click', function(e){
+      /*
+      var square = $(e.target);
+      var index = [
+        square.attr('row'),
+        square.attr('col')
+      ];
+      */
+      scope.playerTurn(boxNode);
 
-  boxNode.on('click', function(){
-
-    //console.log(boxNode.class)
-    //console.log(this.turn);
-    scope.colorBoxOnClick(boxNode);
-    scope.togglePlayerTurn();
-    var boxId = scope.getClass(boxNode);
-    scope.mapMoveToBoard(boxId);
-
-    //boxNode.css({'backgroundColor': this.turn.color});
-
-    //replace blue Color with a function that applies this.turn to the box and adjusts the logic of the game
   });
   return boxNode;
 };
@@ -233,6 +223,17 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
 
 
 //   -------   Interactions & Gameplay   --------
+
+TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
+
+  
+  this.colorBoxOnClick(boxNode);
+  this.togglePlayerTurn();
+
+  var boxId = this.getClass(boxNode);
+  this.mapMoveToBoard(boxId);
+
+};
 
 
 TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){

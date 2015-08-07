@@ -1,0 +1,9 @@
+Constructor Functions
+
+Right now winner is attached to player
+
+Winner should instead be attached to the game.
+
+.winner: PlayerOne || PlayerTwo
+
+.isWon: true || false
