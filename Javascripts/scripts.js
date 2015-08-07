@@ -40,9 +40,9 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   //Nested Array used to test for winning
 
 var gameboard = [
-  [-1, 0, 0],   //gameboard[0]
-  [0, -1, 0],   //gameboard[1]
-  [0, 0, -1]    //gameboard[2]
+  [0, 0, 0],   //gameboard[0]
+  [0, 0, 0],   //gameboard[1]
+  [0, 0, 0]    //gameboard[2]
 ]
 
 console.log(gameboard);
@@ -61,9 +61,9 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
-    [0, 0, -1],   //gameboard[0]
-    [0, -1, 0],   //gameboard[1]
-    [-1, 0, 0]    //gameboard[2]
+    [0, 0, 0],   //gameboard[0]
+    [0, 0, 0],   //gameboard[1]
+    [0, 0, 0]    //gameboard[2]
   ];
   return gameboard;
 };
@@ -161,12 +161,6 @@ TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
 
 
 
-
-
-
-
-
-
 //----------------- Graphics & Rendering ----------------
 
 
@@ -226,7 +220,8 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
     //console.log(this.turn);
     scope.colorBoxOnClick(boxNode);
     scope.togglePlayerTurn();
-    scope.getClass(boxNode);
+    var boxId = scope.getClass(boxNode);
+    scope.mapMoveToBoard(boxId);
 
     //boxNode.css({'backgroundColor': this.turn.color});
 
@@ -234,6 +229,7 @@ TicTacToe.prototype.bindBox = function bindBox(boxNode) {
   });
   return boxNode;
 };
+
 
 
 //   -------   Interactions & Gameplay   --------
@@ -283,14 +279,46 @@ TicTacToe.prototype.getClass = function getClass(clickedNode) {
           if ( clickedNode.is(boxId) ) {
 
             return boxId;
-
           }
       }
     }
+};
 
+TicTacToe.prototype.mapMoveToBoard = function mapMoveToBoard(boxId){
 
-
+switch (boxId) {
+  case ('.top-row .column-one'):
+  this.gameboard[0][0] = this.turn.piece;
+  break;
+  case ('.top-row .column-two'):
+  this.gameboard[0][1] = this.turn.piece;
+  break;
+  case ('.top-row .column-three'):
+  this.gameboard[0][2] = this.turn.piece;
+  break;
+  case ('.middle-row .column-one'):
+  this.gameboard[1][0] = this.turn.piece;
+  break;
+  case ('.middle-row .column-two'):
+  this.gameboard[1][1] = this.turn.piece;
+  break;
+  case ('.middle-row .column-three'):
+  this.gameboard[1][2] = this.turn.piece;
+  break;
+  case ('.bottom-row .column-one'):
+  this.gameboard[2][0] = this.turn.piece;
+  break;
+  case ('.bottom-row .column-two'):
+  this.gameboard[2][1] = this.turn.piece;
+  break;
+  case ('.bottom-row .column-three'):
+  this.gameboard[2][2] = this.turn.piece;
+  break;
+  default:
+  console.log('Keep Trying...');
 }
+
+};
 
 TicTacToe.prototype.convertClassToIndex = function convertClassToIndex(boxId) {
 
