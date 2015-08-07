@@ -1,21 +1,42 @@
 console.log('...loaded');
 
-
 function Universe(options) {
-    this.name = 'Test';
+  this.galaxies = options.galaxies || [];
+  console.log(this.galaxies.length);
+}
+
+Universe.prototype.buildUniverse = function buildUniverse() {
+  var universe = $('<div>').attr('id', 'universe');
+  var galaxy;
+  console.log('hey');
+  for (var i = 0; i < this.galaxies.length; i++) {
+    console.log('hey');
+      galaxy = this.galaxies[i];
+      console.log(galaxy);
+      universe.append(galaxy.buildGalaxy());
+  }
+  return $('body').append(universe);
+};
+
+
+
+function Galaxy(options) {
+    this.name = name || 'Unnamed';
     this.planets = options.planets || [];
 };
 
-Universe.prototype.buildUniverse = function buildUniverse(){
-  var container = $('<div>').attr('id', 'universe');
+Galaxy.prototype.buildGalaxy = function buildGalaxy(){
+  var container = $('<div>').addClass('galaxy');
   var planet;
   for (var i = 0; i < this.planets.length; i++) {
       planet = this.planets[i];
       container.append(planet.renderBoard());
   }
-  return $('body').append(container);
+  return container;
 };
 
+
+// ---- Planet Constructor Function
 
 function Planet(name) {
   var gameboard = [
@@ -30,9 +51,6 @@ function Planet(name) {
   this.winType = null;
 }
 
-
-
-
 // Render Board
   //Uses .bindBox()
 
@@ -42,31 +60,31 @@ Planet.prototype.renderBoard = function renderBoard() {
 
   //Top Row
   var topRow = $('<div>').addClass('row top-row');
-  var columnOneTop = $('<div>').addClass('box top-row column-one').attr('row', 0).attr('col', 0);
+  var columnOneTop = $('<div>').addClass('box column-one').attr('row', 0).attr('col', 0);
   this.bindBox(columnOneTop);
-  var columnTwoTop = $('<div>').addClass('box top-row column-two').attr('row', 0).attr('col', 1);
+  var columnTwoTop = $('<div>').addClass('box column-two').attr('row', 0).attr('col', 1);
   this.bindBox(columnTwoTop);
-  var columnThreeTop = $('<div>').addClass('box top-row column-three').attr('row', 0).attr('col', 2);
+  var columnThreeTop = $('<div>').addClass('box column-three').attr('row', 0).attr('col', 2);
   this.bindBox(columnThreeTop);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box middle-row column-one').attr('row', 1).attr('col', 0);
+  var columnOneMid = $('<div>').addClass('box column-one').attr('row', 1).attr('col', 0);
   this.bindBox(columnOneMid);
-  var columnTwoMid = $('<div>').addClass('box middle-row column-two').attr('row', 1).attr('col', 1);
+  var columnTwoMid = $('<div>').addClass('box column-two').attr('row', 1).attr('col', 1);
   this.bindBox(columnTwoMid);
-  var columnThreeMid = $('<div>').addClass('box middle-row column-three').attr('row', 1).attr('col', 2);
+  var columnThreeMid = $('<div>').addClass('box column-three').attr('row', 1).attr('col', 2);
   this.bindBox(columnThreeMid);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
   //Bottom Row
   var bottomRow = $('<div>').addClass('row bottom-row');
-  var columnOneBot = $('<div>').addClass('box bottom-row column-one').attr('row', 2).attr('col', 0);
+  var columnOneBot = $('<div>').addClass('box column-one').attr('row', 2).attr('col', 0);
   this.bindBox(columnOneBot);
-  var columnTwoBot = $('<div>').addClass('box bottom-row column-two').attr('row', 2).attr('col', 1);
+  var columnTwoBot = $('<div>').addClass('box column-two').attr('row', 2).attr('col', 1);
   this.bindBox(columnTwoBot);
-  var columnThreeBot = $('<div>').addClass('box bottom-row column-three').attr('row', 2).attr('col', 2);
+  var columnThreeBot = $('<div>').addClass('box column-three').attr('row', 2).attr('col', 2);
   this.bindBox(columnThreeBot);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
@@ -463,8 +481,46 @@ console.log(testPlayer1);
 console.log(testPlayer2);
 
 
-var universe = new Universe({planets: [new Planet('Tatooine'),
-new Planet('Endor')]});
+var galaxyOne = new Galaxy({name: 'Steve', planets: [
+  new Planet('Tatooine'),
+  new Planet('Endor'),
+  new Planet('Coruscant'),
+  new Planet('Bespin'),
+  new Planet('Hoth'),
+  new Planet('Dagobah'),
+  new Planet('Alderaan'),
+  new Planet('Kashyyyk'),
+  new Planet('Corellia')
+]});
+
+var galaxyTwo = new Galaxy({name: 'steve2', planets: [
+  new Planet('Tatooine2'),
+  new Planet('Endor2'),
+  new Planet('Coruscant2'),
+  new Planet('Bespin2'),
+  new Planet('Hoth2'),
+  new Planet('Dagobah2'),
+  new Planet('Alderaan2'),
+  new Planet('Kashyyyk2'),
+  new Planet('Corellia2')
+]});
+
+var galaxyThree = new Galaxy({name: 'steve3', planets: [
+  new Planet('Tatooine3'),
+  new Planet('Endor3'),
+  new Planet('Coruscant3'),
+  new Planet('Bespin3'),
+  new Planet('Hoth3'),
+  new Planet('Dagobah3'),
+  new Planet('Alderaan3'),
+  new Planet('Kashyyyk3'),
+  new Planet('Corellia3')
+]});
+
+
+
+var universe = new Universe({galaxies: [galaxyOne, galaxyTwo, galaxyThree]});
+
 
 
 var game = new TicTacToe(testPlayer1, testPlayer2, universe);
