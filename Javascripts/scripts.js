@@ -6,7 +6,7 @@ function Player(name, piece, color){
   this.name = name || 'Unnamed Player';
   this.piece = piece;
   this.color = color;
-  this.winner = false;
+  //this.winner = false;
   this.canClick = true;
 }
 
@@ -22,6 +22,9 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   this.playerOne = playerOne;
   this.playerTwo = playerTwo;
   this.turn = this.playerOne;
+
+  this.winner = null;
+
   //this.piece =
 
 
@@ -74,11 +77,17 @@ TicTacToe.prototype.checkWinner = function checkWinner(){
     this.columnChecker();
     this.diagonalBottomChecker();
     this.diagonalTopChecker();
+    //this.tieCheck();
 
-    console.log('Is player one a winner? ' + this.playerOne.winner);
-    console.log('Is player two a winner? ' + this.playerTwo.winner);
+    if (this.winner !== null) {
+    console.log('The winner is ' + this.winner.name);
+    console.log('insert end game funciton')
+    }
 }
 
+TicTacToe.prototype.tieCheck = function tieCheck(){
+
+}
 
 TicTacToe.prototype.rowChecker = function rowChecker(){
   var rowSum = 0;
@@ -90,10 +99,10 @@ TicTacToe.prototype.rowChecker = function rowChecker(){
         rowSum += this.gameboard[r][c];
 
         if  (rowSum === 3) {
-          this.playerOne.winner = true;
+          this.winner = this.playerOne;
         }
         else if (rowSum === -3) {
-          this.playerTwo.winner = true;
+          this.winner = this.playerTwo;
         }
       }
 
@@ -107,12 +116,11 @@ TicTacToe.prototype.columnChecker = function columnChecker(){
     colSum = 0;
       for (var r = 0; r < 3; r++) {
         colSum += this.gameboard[r][c];
-        console.log(colSum);
         if  (colSum === 3) {
-          this.playerOne.winner = true;
+          this.winner = this.playerOne;
         }
         else if (colSum === -3) {
-          this.playerTwo.winner = true;
+          this.winner = this.playerTwo;
         }
       }
 }
@@ -127,10 +135,10 @@ TicTacToe.prototype.diagonalBottomChecker = function diagonalBottomChecker(){
       }
 
       if  (diagonalSum === 3) {
-        this.playerOne.winner = true;
+        this.winner = this.playerOne;
       }
       else if (diagonalSum === -3) {
-        this.playerTwo.winner = true;
+        this.winner = this.playerTwo;
       }
     }
 };
@@ -141,10 +149,10 @@ TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
     for (var i = 0; i < 3; i++) {
       diagonalSum += this.gameboard[i][i];
       if  (diagonalSum === 3) {
-        this.playerOne.winner = true;
+        this.winner = this.playerOne;
       }
       else if (diagonalSum === -3) {
-        this.playerTwo.winner = true;
+        this.winner = this.playerTwo;
       }
 }
 };
@@ -240,7 +248,7 @@ TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
   this.colorBoxOnClick(boxNode);
   this.togglePlayerTurn();
 
-
+  this.checkWinner();
 
 };
 

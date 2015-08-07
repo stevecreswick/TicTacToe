@@ -1,5 +1,7 @@
 Constructor Functions
 
+//TIE - If array.indexOf(0) = -1
+
 Right now winner is attached to player
 
 Winner should instead be attached to the game.
@@ -7,3 +9,18 @@ Winner should instead be attached to the game.
 .winner: PlayerOne || PlayerTwo
 
 .isWon: true || false
+
+
+$('.square').on('click', function(e) {
+    var square = $(e.target);
+    var index = [
+      square.attr('col'),
+      square.attr('row')
+    ];
+
+    if (scope.xplays){
+      scope.player1Input(square, index);
+    }else if (scope.oplays) {
+      scope.player2Input(square, index);
+    }
+  });
