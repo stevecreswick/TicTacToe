@@ -40,9 +40,9 @@ function TicTacToe(gameboard, playerOne, playerTwo){
   //Nested Array used to test for winning
 
 var gameboard = [
-  [0, 1, 0],   //gameboard[0]
-  [0, 1, 0],   //gameboard[1]
-  [0, 1, 0]    //gameboard[2]
+  [-1, 0, 0],   //gameboard[0]
+  [0, -1, 0],   //gameboard[1]
+  [0, 0, -1]    //gameboard[2]
 ]
 
 console.log(gameboard);
@@ -61,9 +61,9 @@ TicTacToe.prototype.placePiece = function placePiece(row, col){
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
-    [0, 0, 0],   //gameboard[0]
-    [0, 0, 0],   //gameboard[1]
-    [0, 0, 0]    //gameboard[2]
+    [0, 0, -1],   //gameboard[0]
+    [0, -1, 0],   //gameboard[1]
+    [-1, 0, 0]    //gameboard[2]
   ];
   return gameboard;
 };
@@ -114,14 +114,47 @@ TicTacToe.prototype.columnChecker = function columnChecker(){
         }
         else if (colSum === -3) {
           this.playerTwo.winner = true;
-          console.log(this.playerOne.name + " wins in column " + c)
+          console.log(this.playerTwo.name + " wins in column " + c);
         }
       }
 }
 };
 
+TicTacToe.prototype.diagonalBottomChecker = function diagonalBottomChecker(){
 
+  var diagonalSum = 0;
+    for (var r = 2; r >= 0; r--) {
+      for (var c = 0; c < 3; c++) {
+        diagonalSum += this.gameboard[r][c];
+      }
 
+      if  (diagonalSum === 3) {
+        this.playerOne.winner = true;
+        console.log(this.playerOne.name + " wins in diagonalBotom " + c);
+      }
+      else if (diagonalSum === -3) {
+        this.playerTwo.winner = true;
+        console.log(this.playerTwo.name + " wins in diagonalBottom " + c);
+      }
+    }
+};
+
+TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
+
+  var diagonalSum = 0;
+    for (var i = 0; i < 3; i++) {
+      diagonalSum += this.gameboard[i][i];
+      if  (diagonalSum === 3) {
+        this.playerOne.winner = true;
+        console.log(diagonalSum);
+        console.log(this.playerOne.name + " wins from diagonalTop ");
+      }
+      else if (diagonalSum === -3) {
+        this.playerTwo.winner = true;
+        console.log(this.playerTwo.name + " wins from diagonalTop ");
+      }
+}
+};
   //update array length to something scaleable
 
 
