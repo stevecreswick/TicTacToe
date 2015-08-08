@@ -13,6 +13,13 @@ var gamestate = {
   playerTwoPoints: 0
 }
 
+function startGame(){
+
+}
+
+function gameOver() {
+
+}
 
 
 // -- Create and Manipulate the Universe
@@ -123,7 +130,8 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         scope.playerTurn(boxNode, gamestate);
         console.log(scope.winner);
         console.log(scope);
-        console.log(gamestate.playerOneTurn);
+        console.log('points 1:' + gamestate.playerOnePoints);
+        console.log('points 2:' + gamestate.playerTwoPoints);
       } else {
         console.log('You cannot make this move.');
       }
@@ -148,19 +156,24 @@ Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
     if (gamestate.playerOneTurn === true){
       boxNode.css({'backgroundColor': gamestate.playerOneColor});
       gamestate.playerOneTurn = false;
-      console.log(gamestate);
     } else {
       boxNode.css({'backgroundColor': gamestate.playerTwoColor});
       gamestate.playerOneTurn = true;
-      console.log(gamestate);
       }
   } else {
     console.log('This planet has been captured');
   }
 };
 
+Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
+  if (gamestate.playerOnePoints > 67){
+    console.log('Player One Won: ' + gamestate.playerOnePoints);
+  } else if (gamestate.playerTwoPoints > 67){
+    console.log('Player Two Won: ' + gamestate.playerTwoPoints);
+  }
 
-
+  //update with gameover() function
+};
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
@@ -168,13 +181,14 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
   this.colorBoxOnClick(boxNode, gamestate);
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
-  this.checkWinner(gamestate);
+  this.checkPlanetWinner(gamestate);
+  this.checkGameWinner(gamestate);
 
 };
 
 
 
-Planet.prototype.checkWinner = function checkWinner(gamestate){
+Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
 
     this.rowChecker(gamestate);
     this.columnChecker(gamestate);
@@ -189,7 +203,7 @@ Planet.prototype.checkWinner = function checkWinner(gamestate){
     }
 }
 
-TicTacToe.prototype.tieCheck = function tieCheck(){
+Planet.prototype.tieCheck = function tieCheck(){
 
 }
 
