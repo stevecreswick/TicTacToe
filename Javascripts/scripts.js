@@ -13,9 +13,28 @@ var gamestate = {
   playerTwoPoints: 0
 }
 
-function startGame(){
+TicTacToe.prototype.startGame = function startGame(){
+
+  this.renderNameForm();
+  //When I start the game, a form will appear at the bottom of the screen
+
 
 }
+
+TicTacToe.prototype.renderNameForm = function renderNameForm() {
+  var form = $('<form>');
+    form.attr('id', 'player-name-entry');
+  var input = $('<input>');
+    input.attr('type', 'text');
+    input.attr('name', 'playerName[name]');
+    input.attr('placeholder', 'enter your name');
+  var submitButton = $('<button>').attr('type', 'sumbit').addClass('enter-name-button').text('Enter');
+  form.append(input, submitButton);
+  return $('body').append(form);
+}
+
+
+
 
 function gameOver() {
 
@@ -499,6 +518,7 @@ $(document).ready(function(){
 
 function init(){
 
+  game.startGame();
   game.universe.buildUniverse();
 
 }
