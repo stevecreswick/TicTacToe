@@ -401,6 +401,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
           scope.appendName(nameText);
           nameField.val('');  // Clear out the input
           scope.universe.buildUniverse();
+          scope.removeStartMenu();
           return scope;
         });
     };
@@ -413,10 +414,9 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
 
   // --- Name Form End
 
-TicTacToe.prototype.applyName = function applyName(nameText){
-    var name = $('h3');
-    name.html(nameText);
-    return name;
+  TicTacToe.prototype.removeStartMenu = function removeStartMenu(){
+    var startContainer = $('#start-menu-container');
+    startContainer.remove();
   };
 
 //TEST
