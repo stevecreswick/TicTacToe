@@ -140,7 +140,7 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         console.log('You cannot make this move.');
       }
   });
-  return boxNode;
+  return boxNode, gamestate;
 };
 
 Planet.prototype.mapToArray = function mapToArray(row, col, gamestate){
@@ -181,12 +181,13 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
-  console.log(gamestate);
+  console.log('player turn function ' + gamestate.playerOnePoints);
   this.colorBoxOnClick(boxNode, gamestate);
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
   this.checkPlanetWinner(gamestate);
   this.checkGameWinner(gamestate);
+
 
 };
 
@@ -204,7 +205,9 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
 
     if (this.winner !== null) {
     console.log('The winner is ' + this.winner);
-    console.log('insert end game funciton')
+    console.log('insert end game funciton');
+    removeMenuBar();
+    renderMenuBar(gamestate);
     //alter gamestate
     }
 }
@@ -330,7 +333,7 @@ function TicTacToe(universe){
 
 
   TicTacToe.prototype.startGame = function startGame(){
-    this.renderStartMenu();
+    this.renderStartMenu(gamestate);
     //this.universe.buildUniverse();
     //this.renderNameForm();
     //When I start the game, a form will appear at the bottom of the screen
@@ -344,22 +347,22 @@ function TicTacToe(universe){
 // Start Menu Start ---
 
 
-TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
+TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   var container = $('<div>').attr('id', "start-menu-container");
 
-  container.append(this.renderWelcomeMenu());
+  container.append(this.renderWelcomeMenu(gamestate));
 
   return $('body').append(container);
 };
 
 // --- Start Menu Parts
 
-  TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu() {
+  TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu(gamestate) {
 
     var menu = $('<div>').addClass('welcome-menu');
 
     var welcomeBox = this.renderWelcomeBox();
-    var nameForm = this.renderNameForm();
+    var nameForm = this.renderNameForm(gamestate);
     menu.append(welcomeBox, nameForm);
 
     return menu;
@@ -377,7 +380,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
 
   // Name Form Start ---
 
-    TicTacToe.prototype.renderNameForm = function renderNameForm() {
+    TicTacToe.prototype.renderNameForm = function renderNameForm(gamestate) {
       var form = $('<form>');
         form.attr('id', 'player-name-entry');
       var input = $('<input>');
@@ -387,11 +390,11 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
         input.attr('id', 'name-entry');
       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
       form.append(input, submitButton);
-      this.bindNameForm(form);
+      this.bindNameForm(form, gamestate);
       return form;
     }
 
-    TicTacToe.prototype.bindNameForm = function bindNameForm(form){
+    TicTacToe.prototype.bindNameForm = function bindNameForm(form, gamestate){
       var scope = this;
       console.log(scope);
         form.on('submit', function(e){
@@ -399,10 +402,13 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
           var nameField = $(this).find('input[name="playerName[name]"]');
           var nameText = nameField.val();
           console.log(nameText);
+
+
           scope.appendGameName();
-          scope.appendName(nameText);
+          //scope.appendName(nameText);
           scope.applyNameToGameLogic(nameText);
           scope.universe.buildUniverse();
+          renderMenuBar(gamestate);
           scope.removeStartMenu();
           return scope;
         });
@@ -431,9 +437,100 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
     startContainer.remove();
   };
 
-
   // --- START MENU End
 
+
+
+  //  MENU BAR Start ---
+
+function renderMenuBar(gamestate) {
+  var menuBar = $('<div>');
+  menuBar.attr('id', 'gamestate-bar');
+  var playerOneInfo = this.renderPlayerOneInfo(gamestate);
+  var playerTwoInfo = this.renderPlayerTwoInfo(gamestate);
+  menuBar.append(playerOneInfo, playerTwoInfo);
+
+  return $('body').append(menuBar);
+};
+
+function removeMenuBar() {
+  var menuBar = $('#gamestate-bar');
+  menuBar.remove();
+}
+
+//Have a box below the game
+
+  //Player One Info
+
+function renderPlayerOneInfo(gamestate) {
+  var playerOneInfoDiv = $('<div>');
+  playerOneInfoDiv.addClass('playerOne info');
+  var playerOneName = renderPlayerOneName(gamestate);
+  var playerOneScore = renderPlayerOneScore(gamestate);
+  playerOneInfoDiv.append(playerOneName, playerOneScore);
+  return playerOneInfoDiv;
+
+};
+
+function renderPlayerOneName(gamestate) {
+  var playerOneNameDiv = $('<div>');
+  playerOneNameDiv.addClass('playerOne name');
+  var playerOneName = $('<h5>');
+  playerOneName.html('High Commander ' + gamestate.playerOne);
+  playerOneNameDiv.append(playerOneName);
+
+return playerOneNameDiv;
+};
+
+function renderPlayerOneScore(gamestate) {
+  var playerOneScoreDiv = $('<div>')
+  playerOneScoreDiv.addClass('playerOne score');
+  var playerOne = $('<h5>');
+  console.log('renderPlayerOnePoint: ' + gamestate.playerOnePoints);
+  playerOne.html('Score: ' + gamestate.playerOnePoints);
+  playerOneScoreDiv.append(playerOne);
+
+return playerOneScoreDiv;
+};
+
+  //  Player Two Info
+
+function renderPlayerTwoInfo(gamestate) {
+  var playerTwoInfoDiv = $('<div>')
+  playerTwoInfoDiv.addClass('playerTwo info');
+  var playerTwoName = renderPlayerTwoName(gamestate);
+  var playerTwoScore = renderPlayerTwoScore(gamestate);
+  playerTwoInfoDiv.append(playerTwoName, playerTwoScore);
+  return playerTwoInfoDiv;
+
+};
+
+function renderPlayerTwoName(gamestate) {
+  var playerTwoNameDiv = $('<div>')
+  playerTwoNameDiv.addClass('playerOne name');
+  var playerTwoName = $('<h5>');
+  playerTwoName.text('Attacker: ' + gamestate.playerTwo);
+  playerTwoNameDiv.append(playerTwoName);
+
+  return playerTwoNameDiv;
+};
+
+function renderPlayerTwoScore(gamestate) {
+  var playerTwoScoreDiv = $('<div>')
+  playerTwoScoreDiv.addClass('playerOne score');
+  var playerTwo = $('<h5>');
+  playerTwo.html('Score :' + gamestate.playerTwoPoints);
+  playerTwoScoreDiv.append(playerTwo);
+
+return playerTwoScoreDiv;
+};
+
+
+
+
+  // --- MENU BAR End
+
+//  Game State Menu:
 
 
 
