@@ -28,12 +28,31 @@ TicTacToe.prototype.renderNameForm = function renderNameForm() {
     input.attr('type', 'text');
     input.attr('name', 'playerName[name]');
     input.attr('placeholder', 'enter your name');
-  var submitButton = $('<button>').attr('type', 'sumbit').addClass('enter-name-button').text('Enter');
+  var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
   form.append(input, submitButton);
+  this.bindNameForm(form);
   return $('body').append(form);
 }
 
+TicTacToe.prototype.bindNameForm = function bindNameForm(form){
+  var scope = this;
+  console.log(scope);
+    form.on('submit', function(e){
+      e.preventDefault();
+      var nameField = $(this).find('input[name="playerName[name]"]');
+      var nameText = nameField.val();
+      console.log(nameText);
+      scope.appendName(nameText);
+      nameField.val('');  // Clear out the input
+      return scope;
+    });
+};
 
+TicTacToe.prototype.appendName = function appendName(nameText){
+  var name = $('h3');
+  name.html(nameText);
+  return name;
+};
 
 
 function gameOver() {
