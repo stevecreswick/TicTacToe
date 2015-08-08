@@ -1,5 +1,19 @@
 console.log('...loaded');
 
+var gamestate = {
+  active: true,
+  playerOne: 'Steve',
+  playerTwo: 'Kathew',
+  playerOneColor: 'red',
+  playerTwoColor: 'blue',
+  playerOneTurn: true,
+  playerOnePoints: 0,
+  playerTwoPoints: 0
+}
+
+
+
+// -- Create and Manipulate the Universe
 function Universe(options) {
   this.galaxies = options.galaxies || [];
   console.log(this.galaxies.length);
@@ -8,9 +22,7 @@ function Universe(options) {
 Universe.prototype.buildUniverse = function buildUniverse() {
   var universe = $('<div>').attr('id', 'universe');
   var galaxy;
-  console.log('hey');
   for (var i = 0; i < this.galaxies.length; i++) {
-    console.log('hey');
       galaxy = this.galaxies[i];
       console.log(galaxy);
       universe.append(galaxy.buildGalaxy());
@@ -19,7 +31,7 @@ Universe.prototype.buildUniverse = function buildUniverse() {
 };
 
 
-
+// Create and Manipulate the Universe's Galaxies
 function Galaxy(options) {
     this.name = name || 'Unnamed';
     this.planets = options.planets || [];
@@ -30,13 +42,13 @@ Galaxy.prototype.buildGalaxy = function buildGalaxy(){
   var planet;
   for (var i = 0; i < this.planets.length; i++) {
       planet = this.planets[i];
-      container.append(planet.renderBoard());
+      container.append(planet.renderBoard(gamestate));
   }
   return container;
 };
 
 
-// ---- Planet Constructor Function
+// Create and Manipulate the Galaxies Planets
 
 function Planet(name) {
   var gameboard = [
@@ -49,43 +61,45 @@ function Planet(name) {
   this.gameboard = gameboard;
   this.winner = null;
   this.winType = null;
+
 }
 
+//Planet.prototype.setPlayer
 // Render Board
   //Uses .bindBox()
 
-Planet.prototype.renderBoard = function renderBoard() {
+Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
   var board = $('<div>').addClass('board');
 
   //Top Row
   var topRow = $('<div>').addClass('row top-row');
   var columnOneTop = $('<div>').addClass('box column-one').attr('row', 0).attr('col', 0);
-  this.bindBox(columnOneTop);
+  this.bindBox(columnOneTop, gamestate);
   var columnTwoTop = $('<div>').addClass('box column-two').attr('row', 0).attr('col', 1);
-  this.bindBox(columnTwoTop);
+  this.bindBox(columnTwoTop, gamestate);
   var columnThreeTop = $('<div>').addClass('box column-three').attr('row', 0).attr('col', 2);
-  this.bindBox(columnThreeTop);
+  this.bindBox(columnThreeTop, gamestate);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
   var columnOneMid = $('<div>').addClass('box column-one').attr('row', 1).attr('col', 0);
-  this.bindBox(columnOneMid);
+  this.bindBox(columnOneMid, gamestate);
   var columnTwoMid = $('<div>').addClass('box column-two').attr('row', 1).attr('col', 1);
-  this.bindBox(columnTwoMid);
+  this.bindBox(columnTwoMid, gamestate);
   var columnThreeMid = $('<div>').addClass('box column-three').attr('row', 1).attr('col', 2);
-  this.bindBox(columnThreeMid);
+  this.bindBox(columnThreeMid, gamestate);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
   //Bottom Row
   var bottomRow = $('<div>').addClass('row bottom-row');
   var columnOneBot = $('<div>').addClass('box column-one').attr('row', 2).attr('col', 0);
-  this.bindBox(columnOneBot);
+  this.bindBox(columnOneBot, gamestate);
   var columnTwoBot = $('<div>').addClass('box column-two').attr('row', 2).attr('col', 1);
-  this.bindBox(columnTwoBot);
+  this.bindBox(columnTwoBot, gamestate);
   var columnThreeBot = $('<div>').addClass('box column-three').attr('row', 2).attr('col', 2);
-  this.bindBox(columnThreeBot);
+  this.bindBox(columnThreeBot, gamestate);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
   board.append(topRow, middleRow, bottomRow);
@@ -97,7 +111,7 @@ Planet.prototype.renderBoard = function renderBoard() {
 // Binding Button
   // Used in the .renderBoard() function
 
-Planet.prototype.bindBox = function bindBox(boxNode) {
+Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
   var scope = this;
 
   boxNode.on('click', function(e){
@@ -107,10 +121,9 @@ Planet.prototype.bindBox = function bindBox(boxNode) {
         parseInt(square.attr('row')),
         parseInt(square.attr('col'))
       ];
-
       if (scope.gameboard[index[0]][index[1]] === 0){
         scope.mapToArray(index[0],index[1]);
-        //scope.playerTurn(boxNode);
+        scope.playerTurn(boxNode, gamestate);
       } else {
         console.log('You cannot make this move.');
       }
@@ -119,11 +132,37 @@ Planet.prototype.bindBox = function bindBox(boxNode) {
 };
 
 
+
 Planet.prototype.mapToArray = function mapToArray(row, col){
   this.gameboard[row][col] = 1; //this.turn.piece;
   console.log(this.gameboard[row]);
 };
 
+
+Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
+
+  if (gamestate.playerOneTurn === true){
+  boxNode.css({'backgroundColor': gamestate.playerOneColor});
+  gamestate.playerOneTurn = false;
+  console.log(gamestate);
+} else {
+  boxNode.css({'backgroundColor': gamestate.playerTwoColor});
+  gamestate.playerOneTurn = true;
+  console.log(gamestate);
+}
+
+
+};
+
+Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
+
+  console.log(gamestate);
+  this.colorBoxOnClick(boxNode, gamestate);
+  //this.togglePlayerTurn(); //move into TicTacToe Function
+
+  //this.checkWinner();
+
+};
 
 
 //   -------   Interactions & Gameplay   --------
@@ -139,20 +178,8 @@ TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
 };
 
 
-TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
-
-  boxNode.css({'backgroundColor': this.turn.color});
-
-};
-//----------------------------END TESTING
 
 
-
-
-
-
-
-// Move Rendering to the Universe
 
 
 //             <------ Player Constructor ------>
@@ -171,21 +198,15 @@ function Player(name, piece, color){
 
 //       <----- Tic Tace Toe Game Constructor ------>
 
-function TicTacToe(playerOne, playerTwo, universe){
+function TicTacToe(universe){
   this.active = true;
   this.universe = universe;
-  this.playerOne = playerOne;
-  this.playerTwo = playerTwo;
-  this.turn = this.playerOne;
+  //this.playerOne = universe.playerOne;
+  //this.playerTwo = universe.playerTwo;
+  //this.turn = this.playerOne;
 
   this.winner = null;
 
-  //this.piece =
-
-
-  //Not Used Yet
-  this.turnsleft = 9;
-  //this.bestOF = numOfGames;
 
 }
 
@@ -195,22 +216,6 @@ function TicTacToe(playerOne, playerTwo, universe){
 
 //    -------- Logic ---------
 
-  //Nested Array used to test for winning
-
-
-
-/*
-TicTacToe.prototype.placePiece = function placePiece(row, col){
-  if (this.turn === 'X'){
-    gameboard[row][col] = 'X';
-    this.turn = 'O';
-  } else if (this.turn === 'O'){
-    gameboard[row][col] = 'O';
-    this.turn = 'X';
-  }
-  return gameboard;
-}
-*/
 
 TicTacToe.prototype.clearBoard = function clearBoard(){
   gameboard = [
@@ -311,97 +316,9 @@ TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
 
 
 
-
-
-//----------------- Graphics & Rendering ----------------
-
-
-// Render Board
-  //Uses .bindBox()
-/*
-TicTacToe.prototype.renderBoard = function renderBoard() {
-
-  var board = $('<div>').addClass('board');
-
-  //Top Row
-  var topRow = $('<div>').addClass('row top-row');
-  var columnOneTop = $('<div>').addClass('box top-row column-one').attr('row', 0).attr('col', 0);
-  this.bindBox(columnOneTop);
-  var columnTwoTop = $('<div>').addClass('box top-row column-two').attr('row', 0).attr('col', 1);
-  this.bindBox(columnTwoTop);
-  var columnThreeTop = $('<div>').addClass('box top-row column-three').attr('row', 0).attr('col', 2);
-  this.bindBox(columnThreeTop);
-  topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
-
-  //Middle Row
-  var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box middle-row column-one').attr('row', 1).attr('col', 0);
-  this.bindBox(columnOneMid);
-  var columnTwoMid = $('<div>').addClass('box middle-row column-two').attr('row', 1).attr('col', 1);
-  this.bindBox(columnTwoMid);
-  var columnThreeMid = $('<div>').addClass('box middle-row column-three').attr('row', 1).attr('col', 2);
-  this.bindBox(columnThreeMid);
-  middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
-
-  //Bottom Row
-  var bottomRow = $('<div>').addClass('row bottom-row');
-  var columnOneBot = $('<div>').addClass('box bottom-row column-one').attr('row', 2).attr('col', 0);
-  this.bindBox(columnOneBot);
-  var columnTwoBot = $('<div>').addClass('box bottom-row column-two').attr('row', 2).attr('col', 1);
-  this.bindBox(columnTwoBot);
-  var columnThreeBot = $('<div>').addClass('box bottom-row column-three').attr('row', 2).attr('col', 2);
-  this.bindBox(columnThreeBot);
-  bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
-
-  board.append(topRow, middleRow, bottomRow);
-
-  return $('body').append(board);
-}
-
-
-// Binding Button
-  // Used in the .renderBoard() function
-
-TicTacToe.prototype.bindBox = function bindBox(boxNode) {
-  var scope = this;
-
-  boxNode.on('click', function(e){
-
-      var square = $(e.target);
-      var index = [
-        parseInt(square.attr('row')),
-        parseInt(square.attr('col'))
-      ];
-
-      if (scope.gameboard[index[0]][index[1]] === 0){
-        scope.mapToArray(index[0],index[1]);
-        scope.playerTurn(boxNode);
-      } else {
-        console.log('You cannot make this move.');
-      }
-  });
-  return boxNode;
-};
-
-
-TicTacToe.prototype.mapToArray = function mapToArray(row, col){
-  this.gameboard[row][col] = this.turn.piece;
-  console.log(this.gameboard[row]);
-};
-
-*/
-
 //   -------   Interactions & Gameplay   --------
 
-TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
 
-
-  this.colorBoxOnClick(boxNode);
-  this.togglePlayerTurn();
-
-  this.checkWinner();
-
-};
 
 
 TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
@@ -523,7 +440,7 @@ var universe = new Universe({galaxies: [galaxyOne, galaxyTwo, galaxyThree]});
 
 
 
-var game = new TicTacToe(testPlayer1, testPlayer2, universe);
+var game = new TicTacToe(universe);
 
 
 
@@ -540,9 +457,5 @@ $(document).ready(function(){
 function init(){
 
   game.universe.buildUniverse();
-  //game.gameboard[0].buildUniverse();
-  //game.gameboard[1].buildUniverse();
-  //game.renderBoard();
-  //game.bindBox('.top-row', '.column-one');
-  //game.bindBoard();
+
 }
