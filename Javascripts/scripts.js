@@ -13,54 +13,14 @@ var gamestate = {
   playerTwoPoints: 0
 }
 
-TicTacToe.prototype.startGame = function startGame(){
-
-  this.renderNameForm();
-  //When I start the game, a form will appear at the bottom of the screen
-
-
-}
-
-TicTacToe.prototype.renderNameForm = function renderNameForm() {
-  var form = $('<form>');
-    form.attr('id', 'player-name-entry');
-  var input = $('<input>');
-    input.attr('type', 'text');
-    input.attr('name', 'playerName[name]');
-    input.attr('placeholder', 'enter your name');
-  var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
-  form.append(input, submitButton);
-  this.bindNameForm(form);
-  return $('body').append(form);
-}
-
-TicTacToe.prototype.bindNameForm = function bindNameForm(form){
-  var scope = this;
-  console.log(scope);
-    form.on('submit', function(e){
-      e.preventDefault();
-      var nameField = $(this).find('input[name="playerName[name]"]');
-      var nameText = nameField.val();
-      console.log(nameText);
-      scope.appendName(nameText);
-      nameField.val('');  // Clear out the input
-      return scope;
-    });
-};
-
-TicTacToe.prototype.appendName = function appendName(nameText){
-  var name = $('h3');
-  name.html(nameText);
-  return name;
-};
-
 
 function gameOver() {
 
 }
 
 
-// -- Create and Manipulate the Universe
+// -- Create the Universe
+
 function Universe(options) {
   this.galaxies = options.galaxies || [];
   console.log(this.galaxies.length);
@@ -77,8 +37,9 @@ Universe.prototype.buildUniverse = function buildUniverse() {
   return $('body').append(universe);
 };
 
+// --- end of the Universe
 
-// Create and Manipulate the Universe's Galaxies
+// Create the Galaxies
 function Galaxy(options) {
     this.name = name || 'Unnamed';
     this.planets = options.planets || [];
@@ -94,8 +55,13 @@ Galaxy.prototype.buildGalaxy = function buildGalaxy(){
   return container;
 };
 
+// --- end of the Galaxy
 
-// Create and Manipulate the Galaxies Planets
+// --- Planet
+
+  // Create Planets
+  // Control Clicking
+  // Control Game Logic
 
 function Planet(name) {
   var gameboard = [
@@ -226,6 +192,8 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
 
 
+//  Win Logic Start ---
+
 Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
 
     this.rowChecker(gamestate);
@@ -323,31 +291,13 @@ Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
 }
 };
 
+// --- Win Logic End
 
 
+// --- end of the Planet
 
 
-
-
-
-//   -------   Interactions & Gameplay   --------
-
-TicTacToe.prototype.playerTurn = function playerTurn(boxNode){
-
-
-  this.colorBoxOnClick(boxNode);
-  this.togglePlayerTurn();
-
-  this.checkWinner();
-
-};
-
-
-
-
-
-
-//             <------ Player Constructor ------>
+// --- Player ---
 
 function Player(name, piece, color){
   this.name = name || 'Unnamed Player';
@@ -361,7 +311,7 @@ function Player(name, piece, color){
 
 
 
-//       <----- Tic Tace Toe Game Constructor ------>
+//  --- Tic Tac Toe Game ---
 
 function TicTacToe(universe){
   this.active = true;
@@ -375,77 +325,51 @@ function TicTacToe(universe){
 
 }
 
-
-//             <---- Tic Tac Toe Protytype Functions ----->
-
-
-//    -------- Logic ---------
-
-
-TicTacToe.prototype.clearBoard = function clearBoard(){
-  gameboard = [
-    [0, 0, 0],   //gameboard[0]
-    [0, 0, 0],   //gameboard[1]
-    [0, 0, 0]    //gameboard[2]
-  ];
-  return gameboard;
-};
-
-
-
-  //update array length to something scaleable
-
-
-
-//   -------   Interactions & Gameplay   --------
-
-
-
-
-TicTacToe.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode){
-
-  boxNode.css({'backgroundColor': this.turn.color});
-
-};
-
-
-TicTacToe.prototype.togglePlayerTurn = function togglePlayerTurn() {
-  if (this.turn.name == this.playerOne.name) {
-      this.turn = this.playerTwo;
-      console.log(this.turn.name);
-  } else if (this.turn.name == this.playerTwo.name) {
-      this.turn = this.playerOne;
-      console.log(this.turn.name);
+  TicTacToe.prototype.startGame = function startGame(){
+    this.renderNameForm();
+    //When I start the game, a form will appear at the bottom of the screen
   }
-  return this;
-
-};
 
 
+  // Name Form Start ---
 
+  TicTacToe.prototype.renderNameForm = function renderNameForm() {
+    var form = $('<form>');
+      form.attr('id', 'player-name-entry');
+    var input = $('<input>');
+      input.attr('type', 'text');
+      input.attr('name', 'playerName[name]');
+      input.attr('placeholder', 'enter your name');
+    var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
+    form.append(input, submitButton);
+    this.bindNameForm(form);
+    return $('body').append(form);
+  }
+
+  TicTacToe.prototype.bindNameForm = function bindNameForm(form){
+    var scope = this;
+    console.log(scope);
+      form.on('submit', function(e){
+        e.preventDefault();
+        var nameField = $(this).find('input[name="playerName[name]"]');
+        var nameText = nameField.val();
+        console.log(nameText);
+        scope.appendName(nameText);
+        nameField.val('');  // Clear out the input
+        return scope;
+      });
+  };
+
+  TicTacToe.prototype.appendName = function appendName(nameText){
+    var name = $('h3');
+    name.html(nameText);
+    return name;
+  };
+
+  // --- Name Form End
 
 
 //TEST
-
-/*
-TicTacToe.prototype.toggleClicking = function toggleClicking(player){
-
-
-  if (player.canClick === true){
-  player.canClick=false;
-  console.log(player.canClick);
-  }
-  else if (player.canClick === false){
-    console.log(player.canClick);
-
-  player.canClick=true;
-  }
-
-  return player;
-
-};
-*/
-
 
 
 //   --- --- --- Menu --- --- ---
