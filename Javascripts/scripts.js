@@ -6,6 +6,8 @@ var gamestate = {
   playerTwo: 'Kathew',
   playerOneColor: 'red',
   playerTwoColor: 'blue',
+  playerOneMarker: 1,
+  playerTwoMarker: -1,
   playerOneTurn: true,
   playerOnePoints: 0,
   playerTwoPoints: 0
@@ -64,9 +66,6 @@ function Planet(name) {
 
 }
 
-//Planet.prototype.setPlayer
-// Render Board
-  //Uses .bindBox()
 
 Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
@@ -108,9 +107,6 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
 }
 
 
-// Binding Button
-  // Used in the .renderBoard() function
-
 Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
   var scope = this;
 
@@ -121,9 +117,13 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         parseInt(square.attr('row')),
         parseInt(square.attr('col'))
       ];
+
       if (scope.gameboard[index[0]][index[1]] === 0){
-        scope.mapToArray(index[0],index[1]);
+        scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
+        console.log(scope.winner);
+        console.log(scope);
+        console.log(gamestate.playerOneTurn);
       } else {
         console.log('You cannot make this move.');
       }
@@ -131,28 +131,36 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
   return boxNode;
 };
 
-
-
-Planet.prototype.mapToArray = function mapToArray(row, col){
-  this.gameboard[row][col] = 1; //this.turn.piece;
+Planet.prototype.mapToArray = function mapToArray(row, col, gamestate){
+  if (gamestate.playerOneTurn === true) {
+    this.gameboard[row][col] = 1;  //this.turn.piece;
+} else if (gamestate.playerOneTurn === false) {
+    this.gameboard[row][col] = -1;  //this.turn.piece;
+}
   console.log(this.gameboard[row]);
 };
 
 
 Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
 
-  if (gamestate.playerOneTurn === true){
-  boxNode.css({'backgroundColor': gamestate.playerOneColor});
-  gamestate.playerOneTurn = false;
-  console.log(gamestate);
-} else {
-  boxNode.css({'backgroundColor': gamestate.playerTwoColor});
-  gamestate.playerOneTurn = true;
-  console.log(gamestate);
-}
+  if (this.winner === null) {
 
-
+    if (gamestate.playerOneTurn === true){
+      boxNode.css({'backgroundColor': gamestate.playerOneColor});
+      gamestate.playerOneTurn = false;
+      console.log(gamestate);
+    } else {
+      boxNode.css({'backgroundColor': gamestate.playerTwoColor});
+      gamestate.playerOneTurn = true;
+      console.log(gamestate);
+      }
+  } else {
+    console.log('This planet has been captured');
+  }
 };
+
+
+
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
@@ -160,9 +168,114 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
   this.colorBoxOnClick(boxNode, gamestate);
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
-  //this.checkWinner();
+  this.checkWinner(gamestate);
 
 };
+
+
+
+Planet.prototype.checkWinner = function checkWinner(gamestate){
+
+    this.rowChecker(gamestate);
+    this.columnChecker(gamestate);
+    this.diagonalBottomChecker(gamestate);
+    this.diagonalTopChecker(gamestate);
+    //this.tieCheck();
+
+    if (this.winner !== null) {
+    console.log('The winner is ' + this.winner);
+    console.log('insert end game funciton')
+    //alter gamestate
+    }
+}
+
+TicTacToe.prototype.tieCheck = function tieCheck(){
+
+}
+
+Planet.prototype.rowChecker = function rowChecker(gamestate){
+  var rowSum = 0;
+
+  //update array length to something scaleable
+  for (var r = 0; r < 3; r++) {
+      rowSum = 0;
+      for (var c = 0; c < 3; c++) {
+        rowSum += this.gameboard[r][c];
+
+        if  (rowSum === 3) {
+          this.winner = gamestate.playerOne;
+          gamestate.playerOnePoints += 5;
+          return gamestate;
+        }
+        else if (rowSum === -3) {
+          this.winner = gamestate.playerTwo;
+          gamestate.playerTwoPoints += 5;
+          return gamestate;
+        }
+      }
+
+  }
+};
+
+Planet.prototype.columnChecker = function columnChecker(gamestate){
+  var colSum = 0;
+
+  for (var c = 0; c < 3; c++) {
+    colSum = 0;
+      for (var r = 0; r < 3; r++) {
+        colSum += this.gameboard[r][c];
+        if  (colSum === 3) {
+          this.winner = gamestate.playerOne;
+          gamestate.playerOnePoints += 5;
+          return gamestate;        }
+        else if (colSum === -3) {
+          this.winner = gamestate.playerTwo;
+          gamestate.playerTwoPoints += 5;
+          return gamestate;        }
+      }
+}
+};
+
+Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestate){
+
+  var diagonalSum = 0;
+
+  diagonalSum = this.gameboard[2][0] + this.gameboard[1][1] + this.gameboard[0][2];
+
+  if  (diagonalSum === 3) {
+    this.winner = gamestate.playerOne;
+    gamestate.playerOnePoints += 5;
+    return gamestate;
+  }
+  else if (diagonalSum === -3) {
+    this.winner = gamestate.playerTwo;
+    gamestate.playerTwoPoints += 5;
+    return gamestate;
+  }
+
+};
+
+Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
+
+  var diagonalSum = 0;
+    for (var i = 0; i < 3; i++) {
+      diagonalSum += this.gameboard[i][i];
+      if  (diagonalSum === 3) {
+        this.winner = gamestate.playerOne;
+        gamestate.playerOnePoints += 5;
+        return gamestate;      }
+      else if (diagonalSum === -3) {
+        this.winner = gamestate.playerTwo;
+        gamestate.playerTwoPoints += 5;
+        return gamestate;      }
+}
+};
+
+
+
+
+
+
 
 
 //   -------   Interactions & Gameplay   --------
@@ -227,91 +340,7 @@ TicTacToe.prototype.clearBoard = function clearBoard(){
 };
 
 
-TicTacToe.prototype.checkWinner = function checkWinner(){
 
-    this.rowChecker();
-    this.columnChecker();
-    this.diagonalBottomChecker();
-    this.diagonalTopChecker();
-    //this.tieCheck();
-
-    if (this.winner !== null) {
-    console.log('The winner is ' + this.winner.name);
-    console.log('insert end game funciton')
-    }
-}
-
-TicTacToe.prototype.tieCheck = function tieCheck(){
-
-}
-
-TicTacToe.prototype.rowChecker = function rowChecker(){
-  var rowSum = 0;
-
-  //update array length to something scaleable
-  for (var r = 0; r < 3; r++) {
-      rowSum = 0;
-      for (var c = 0; c < 3; c++) {
-        rowSum += this.universe[r][c];
-
-        if  (rowSum === 3) {
-          this.winner = this.playerOne;
-        }
-        else if (rowSum === -3) {
-          this.winner = this.playerTwo;
-        }
-      }
-
-  }
-};
-
-TicTacToe.prototype.columnChecker = function columnChecker(){
-  var colSum = 0;
-
-  for (var c = 0; c < 3; c++) {
-    colSum = 0;
-      for (var r = 0; r < 3; r++) {
-        colSum += this.gameboard[r][c];
-        if  (colSum === 3) {
-          this.winner = this.playerOne;
-        }
-        else if (colSum === -3) {
-          this.winner = this.playerTwo;
-        }
-      }
-}
-};
-
-TicTacToe.prototype.diagonalBottomChecker = function diagonalBottomChecker(){
-
-  var diagonalSum = 0;
-    for (var r = 2; r >= 0; r--) {
-      for (var c = 0; c < 3; c++) {
-        diagonalSum += this.gameboard[r][c];
-      }
-
-      if  (diagonalSum === 3) {
-        this.winner = this.playerOne;
-      }
-      else if (diagonalSum === -3) {
-        this.winner = this.playerTwo;
-      }
-    }
-};
-
-TicTacToe.prototype.diagonalTopChecker = function diagonalTopChecker(){
-
-  var diagonalSum = 0;
-    for (var i = 0; i < 3; i++) {
-      diagonalSum += this.gameboard[i][i];
-      if  (diagonalSum === 3) {
-        this.winner = this.playerOne;
-      }
-      else if (diagonalSum === -3) {
-        this.winner = this.playerTwo;
-      }
-}
-};
   //update array length to something scaleable
 
 
