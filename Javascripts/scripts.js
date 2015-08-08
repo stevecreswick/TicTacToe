@@ -331,7 +331,7 @@ function TicTacToe(universe){
 
   TicTacToe.prototype.startGame = function startGame(){
     this.renderStartMenu();
-    this.renderNameForm();
+    //this.renderNameForm();
     //When I start the game, a form will appear at the bottom of the screen
   }
 
@@ -342,63 +342,72 @@ function TicTacToe(universe){
 
 // Start Menu Start ---
 
+
 TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
-  var container = this.renderStartMenuContainer();
-  var form = this.renderNameForm();
-  container.append(form);
+  var container = $('<div>').attr('id', "start-menu-container");
+
+  container.append(this.renderWelcomeMenu());
+
   return $('body').append(container);
 };
 
-TicTacToe.prototype.renderStartMenuContainer = function renderStartMenuContainer() {
-  var container = $('<div>').attr('id', "start-menu-container");
-  var menu = $('<div>').addClass('menu');
-  var welcomeBox = $('<div>').addClass('welcome-box');
-  var welcomeMessage = $('<h3>').html('Hello');
+// --- Start Menu Parts
 
-  welcomeBox.append(welcomeMessage);
-  menu.append(welcomeBox);
-  container.append(menu);
-  return container;
+  TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu() {
 
-//When I start the page, I should see the Start Menu Div with a Welcome Message
-};
+    var menu = $('<div>').addClass('welcome-menu');
 
+    var welcomeBox = this.renderWelcomeBox();
+    var nameForm = this.renderNameForm();
+    menu.append(welcomeBox, nameForm);
+
+    return menu;
+  };
+
+  TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
+
+    var welcomeBox = $('<div>').addClass('welcome-box');
+    var welcomeMessage = $('<h3>').addClass('welcome-message').html('Hello');
+
+    welcomeBox.append(welcomeMessage);
+    return welcomeBox;
+  };
 
 
   // Name Form Start ---
 
-  TicTacToe.prototype.renderNameForm = function renderNameForm() {
-    var form = $('<form>');
-      form.attr('id', 'player-name-entry');
-    var input = $('<input>');
-      input.attr('type', 'text');
-      input.attr('name', 'playerName[name]');
-      input.attr('placeholder', 'enter your name');
-    var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
-    form.append(input, submitButton);
-    this.bindNameForm(form);
-    return form;
-  }
+    TicTacToe.prototype.renderNameForm = function renderNameForm() {
+      var form = $('<form>');
+        form.attr('id', 'player-name-entry');
+      var input = $('<input>');
+        input.attr('type', 'text');
+        input.attr('name', 'playerName[name]');
+        input.attr('placeholder', 'enter your name');
+      var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
+      form.append(input, submitButton);
+      this.bindNameForm(form);
+      return form;
+    }
 
-  TicTacToe.prototype.bindNameForm = function bindNameForm(form){
-    var scope = this;
-    console.log(scope);
-      form.on('submit', function(e){
-        e.preventDefault();
-        var nameField = $(this).find('input[name="playerName[name]"]');
-        var nameText = nameField.val();
-        console.log(nameText);
-        scope.appendName(nameText);
-        nameField.val('');  // Clear out the input
-        return scope;
-      });
-  };
+    TicTacToe.prototype.bindNameForm = function bindNameForm(form){
+      var scope = this;
+      console.log(scope);
+        form.on('submit', function(e){
+          e.preventDefault();
+          var nameField = $(this).find('input[name="playerName[name]"]');
+          var nameText = nameField.val();
+          console.log(nameText);
+          scope.appendName(nameText);
+          nameField.val('');  // Clear out the input
+          return scope;
+        });
+    };
 
-  TicTacToe.prototype.appendName = function appendName(nameText){
-    var name = $('h3');
-    name.html(nameText);
-    return name;
-  };
+    TicTacToe.prototype.appendName = function appendName(nameText){
+      var name = $('h3');
+      name.html(nameText);
+      return name;
+    };
 
   // --- Name Form End
 
