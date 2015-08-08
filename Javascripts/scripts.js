@@ -343,6 +343,13 @@ function TicTacToe(universe){
 // Start Menu Start ---
 
 TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
+  var container = this.renderStartMenuContainer();
+  var form = this.renderNameForm();
+  container.append(form);
+  return $('body').append(container);
+};
+
+TicTacToe.prototype.renderStartMenuContainer = function renderStartMenuContainer() {
   var container = $('<div>').attr('id', "start-menu-container");
   var menu = $('<div>').addClass('menu');
   var welcomeBox = $('<div>').addClass('welcome-box');
@@ -351,11 +358,11 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
   welcomeBox.append(welcomeMessage);
   menu.append(welcomeBox);
   container.append(menu);
-  return $('body').append(container);
+  return container;
 
 //When I start the page, I should see the Start Menu Div with a Welcome Message
-
 };
+
 
 
   // Name Form Start ---
@@ -370,7 +377,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
     var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
     form.append(input, submitButton);
     this.bindNameForm(form);
-    return $('body').append(form);
+    return form;
   }
 
   TicTacToe.prototype.bindNameForm = function bindNameForm(form){
