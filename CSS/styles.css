@@ -14,28 +14,32 @@ h3 {
   color: rgb(255,215,0);
   font-family: 'Roboto', sans-serif;
   font-size: 24px;
+  margin-top: 0%;
+
+}
+
+h4 {
+  font-size: 24px;
+  color: green;
+  font-family: 'Roboto', sans-serif;
   margin-top: -3%;
 
 }
 
-h3 .welcome-message {
-  color:green;
-}
 
 #start-menu-container {
   float:left;
-  margin-left: 2%;
-  width: 95%;
+  width: 90%;
   height: 80%;
   text-align: center;
   display: inline;
   background-color: grey;
   overflow: auto;
   position: absolute;
+  padding-top: 1em;
   border-radius: 5px;
-  padding-top: 3em;
-  margin-top: -10%;
-
+  margin-top: 5%;
+  margin-left: 5%;
 }
 
 .welcome-menu {
@@ -43,20 +47,24 @@ h3 .welcome-message {
   height: 75%;
   width: 75%;
   background: red;
+  padding: 5%;
+  text-align: center;
 }
 
-.welcome-menu .welcome-box {
+.welcome-box {
   height: 33%;
-  background: pink;
+  background: black;
   vertical-align: middle;
   font-size: 50px;
   padding-top: 5%;
   padding-left: 5%;
   text-align: left;
+  border: solid grey 2px;
+  border-radius: 5px;
 }
 
-#start-menu-container .welcome-menu .welcome-message h3{
-
+#start-menu-container .welcome-menu .welcome-message {
+  color: green;
 }
 
 
@@ -115,6 +123,13 @@ h3 .welcome-message {
   width: 100%;
 }
 
+#player-name-entry {
+
+  text-align:center;
+  width: 100%;
+  margin-top: 10%;
+
+}
 
 .enter-name-button {
   width: 10%;

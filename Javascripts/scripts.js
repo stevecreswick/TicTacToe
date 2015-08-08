@@ -331,6 +331,7 @@ function TicTacToe(universe){
 
   TicTacToe.prototype.startGame = function startGame(){
     this.renderStartMenu();
+    //this.universe.buildUniverse();
     //this.renderNameForm();
     //When I start the game, a form will appear at the bottom of the screen
   }
@@ -367,7 +368,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h3>').addClass('welcome-message').html('Hello');
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('The ship is in critical condition.  You are the only survivor.  The interplanetary forces are awaiting orders.  You must take charge of the navy or we will all perish. What is your name Admiral?');
 
     welcomeBox.append(welcomeMessage);
     return welcomeBox;
@@ -399,18 +400,24 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
           console.log(nameText);
           scope.appendName(nameText);
           nameField.val('');  // Clear out the input
+          scope.universe.buildUniverse();
           return scope;
         });
     };
 
     TicTacToe.prototype.appendName = function appendName(nameText){
-      var name = $('h3');
-      name.html(nameText);
-      return name;
+      var nameNode = $('<h3>');
+      nameNode.html(nameText);
+      return $('body').append(nameNode);
     };
 
   // --- Name Form End
 
+TicTacToe.prototype.applyName = function applyName(nameText){
+    var name = $('h3');
+    name.html(nameText);
+    return name;
+  };
 
 //TEST
 
@@ -505,6 +512,5 @@ $(document).ready(function(){
 function init(){
 
   game.startGame();
-  game.universe.buildUniverse();
 
 }
