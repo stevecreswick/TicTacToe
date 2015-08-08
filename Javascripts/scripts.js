@@ -325,10 +325,37 @@ function TicTacToe(universe){
 
 }
 
+
+//   START GAME FUNCTION ---
+
+
   TicTacToe.prototype.startGame = function startGame(){
+    this.renderStartMenu();
     this.renderNameForm();
     //When I start the game, a form will appear at the bottom of the screen
   }
+
+
+//   ---   START GAME FUNCTION
+
+
+
+// Start Menu Start ---
+
+TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
+  var container = $('<div>').attr('id', "start-menu-container");
+  var menu = $('<div>').addClass('menu');
+  var welcomeBox = $('<div>').addClass('welcome-box');
+  var welcomeMessage = $('<h3>').html('Hello');
+
+  welcomeBox.append(welcomeMessage);
+  menu.append(welcomeBox);
+  container.append(menu);
+  return $('body').append(container);
+
+//When I start the page, I should see the Start Menu Div with a Welcome Message
+
+};
 
 
   // Name Form Start ---
