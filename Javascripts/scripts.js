@@ -368,7 +368,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('The ship is in critical condition.  You are the only survivor.  The interplanetary forces are awaiting orders.  You must take charge of the navy or we will all perish. What is your name Admiral?');
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> The ship is in critical condition.  You are the only surviving commander.  The interplanetary forces are awaiting orders. <br><br>You must take charge of the navy or we will all perish. <br><br>Launch Tactical Display:');
 
     welcomeBox.append(welcomeMessage);
     return welcomeBox;
@@ -383,8 +383,9 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
       var input = $('<input>');
         input.attr('type', 'text');
         input.attr('name', 'playerName[name]');
-        input.attr('placeholder', 'enter your name');
-      var submitButton = $('<button>').attr('type', 'submit').addClass('enter-name-button').text('Enter');
+        input.attr('placeholder', 'enter your name')
+        input.attr('id', 'name-entry');
+      var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
       form.append(input, submitButton);
       this.bindNameForm(form);
       return form;
@@ -398,12 +399,18 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
           var nameField = $(this).find('input[name="playerName[name]"]');
           var nameText = nameField.val();
           console.log(nameText);
+          scope.appendGameName();
           scope.appendName(nameText);
           scope.applyNameToGameLogic(nameText);
           scope.universe.buildUniverse();
           scope.removeStartMenu();
           return scope;
         });
+    };
+
+    TicTacToe.prototype.appendGameName = function appendGameName(){
+      var gameName = $('<h1>').text('Space Tic Tac Toe');
+      return $('body').append(gameName);
     };
 
     TicTacToe.prototype.appendName = function appendName(nameText){
@@ -423,6 +430,11 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu() {
     var startContainer = $('#start-menu-container');
     startContainer.remove();
   };
+
+
+  // --- START MENU End
+
+
 
 
 

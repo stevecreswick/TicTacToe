@@ -8,6 +8,7 @@ h1 {
   font-size: 75px;
   font-weight: bolder;
   margin-top: -1%;
+  margin-bottom: -2%;
 }
 
 h3 {
@@ -33,7 +34,7 @@ h4 {
   height: 80%;
   text-align: center;
   display: inline;
-  background-color: grey;
+  background-color: rgba(0,0,0,-1);
   overflow: auto;
   position: absolute;
   padding-top: 1em;
@@ -46,21 +47,22 @@ h4 {
   display:inline-block;
   height: 75%;
   width: 75%;
-  background: red;
+  background: black;
   padding: 5%;
   text-align: center;
+  border: solid grey 2px;
+  border-radius: 5px;
 }
 
 .welcome-box {
-  height: 33%;
-  background: black;
+  height: 50%;
   vertical-align: middle;
   font-size: 50px;
   padding-top: 5%;
-  padding-left: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
   text-align: left;
-  border: solid grey 2px;
-  border-radius: 5px;
+
 }
 
 #start-menu-container .welcome-menu .welcome-message {
@@ -123,18 +125,113 @@ h4 {
   width: 100%;
 }
 
-#player-name-entry {
-
+#name-entry {
   text-align:center;
-  width: 100%;
-  margin-top: 10%;
-
+  width: 33%;
+  height: 5em;
+  margin-top: 7%;
+  margin-right: 5%;
+  background: white;
+  overflow: auto;
+  border: red 1px solid;
+  padding: -5%;
 }
 
-.enter-name-button {
+
+.button {
   width: 10%;
   background-color: 'red';
   margin-left: 1%;
   text-align: left;
 
+}
+
+::-webkit-input-placeholder {
+   color: green;
+   font-size: 16px;
+   padding: -2%;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: green;
+   font-size: 16px;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: green;
+   font-size: 16px;
+}
+
+input.enter-name-button {
+width: 25%;
+height: 3em;
+display: inline-block;
+background:black;
+color:green;
+font-size: 24px;
+font-weight: bolder;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+border: 1p solid green;
+}
+input.enter-name-button:hover {
+background:red;
+color:white;
+}
+
+#gamestate-bar {
+  height: 6em;
+  width: 100%;
+  background: grey;
+  text-align: center;
+  padding-top: 1em;
+}
+
+
+.info {
+  display: inline-block;
+  width: 33%;
+}
+
+.playerOne {
+  background: red;
+  float: left;
+  height: 80%;
+  color: blue;
+  display: block;
+}
+
+.playerTwo {
+  float: right;
+  height: 80%;
+  background: blue;
+}
+
+.playerOne .name {
+  height: 2em;
+  float: left;
+  display: inline-block;
+  background: orange;
+}
+
+.playerOne .score {
+  height: 2em;
+  float: right;
+  display: inline-block;
+  background: green;
+}
+
+.playerTwo .name {
+  height: 2em;
+  float: right;
+  display: block;
+  background: orange;
+}
+
+.playerTwo .score {
+  height: 2em;
+  float: left;
+  display: inline-block;
+  background: green;
 }
