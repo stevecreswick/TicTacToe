@@ -204,6 +204,7 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
   if (gamestate.playerOnePoints > 67){
     gamestate.winner = 'playerOne';
     gameOverMessage = this.appendGameOverMessage(gamestate);
+    this.gameOver(gamestate);
     return gameOverMessage;
     console.log(game)
     console.log('Player One Won: ' + gamestate.playerOnePoints);
@@ -272,6 +273,9 @@ Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   return winMessage;
 };
 
+
+//   GAME OVER Start ---
+
 Planet.prototype.generateGameOverMessage = function generateGameOverMessage(gamestate){
   var gameOverMessage;
   var playerOneName = gamestate.playerOne;
@@ -284,6 +288,17 @@ Planet.prototype.generateGameOverMessage = function generateGameOverMessage(game
   }
 
   return gameOverMessage;
+};
+
+Planet.prototype.gameOver = function gameOver(gamestate){
+  var universe = $('#universe');
+  var headerTag = $('h1');
+  var menuBar = $('#gamestate-bar');
+  headerTag.remove();
+  universe.remove();
+  menuBar.remove();
+  return $('body');
+
 };
 
 Planet.prototype.alertWin = function alertWin(gamestate){
