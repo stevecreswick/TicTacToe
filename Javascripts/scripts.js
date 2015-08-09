@@ -10,11 +10,12 @@ var gamestate = {
   playerTwoMarker: -1,
   playerOneTurn: true,
   playerOnePoints: 0,
-  playerTwoPoints: 0
+  playerTwoPoints: 0,
+  winner: null
 }
 
 
-function gameOver() {
+function gameOver(gamestate) {
 
 }
 
@@ -198,7 +199,13 @@ Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
 };
 
 Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
+  var gameOverMessage;
+
   if (gamestate.playerOnePoints > 67){
+    gamestate.winner = 'playerOne';
+    gameOverMessage = this.appendGameOverMessage(gamestate);
+    return gameOverMessage;
+    console.log(game)
     console.log('Player One Won: ' + gamestate.playerOnePoints);
   } else if (gamestate.playerTwoPoints > 67){
     console.log('Player Two Won: ' + gamestate.playerTwoPoints);
@@ -206,6 +213,16 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
 
   //update with gameover() function
 };
+
+Planet.prototype.appendGameOverMessage = function appendGameOverMessage(gamestate) {
+  var gameOverMessage = this.generateGameOverMessage(gamestate);
+  console.log('game over message: ' + gameOverMessage);
+  var messageTag =  $('<h5>');
+  messageTag.html(gameOverMessage);
+  var alertBox = $('.gameAlert');
+  alertBox.html(messageTag);
+  return alertBox;
+}
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
@@ -247,12 +264,26 @@ Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   var playerTwoName = gamestate.playerTwo;
   console.log(gamestate);
   if (this.winner === 'playerOne'){
-    winMessage = this.name + ' has been claimed by <br> High Commaner ' + playerOneName;
+    winMessage = this.name + ' has been claimed by <br> Commander ' + playerOneName;
   } else if (this.winner === 'playerTwo') {
     winMessage = this.name + ' has been claimed by <br>' + playerTwoName;
   }
 
   return winMessage;
+};
+
+Planet.prototype.generateGameOverMessage = function generateGameOverMessage(gamestate){
+  var gameOverMessage;
+  var playerOneName = gamestate.playerOne;
+  var playerTwoName = gamestate.playerTwo;
+
+  if (gamestate.winner === 'playerOne'){
+    gameOverMessage = 'Commander' + playerOneName + ' wins';
+  } else if (gamestate.winner === 'playerTwo') {
+    gameOverMessage = playerOneName +' wins';
+  }
+
+  return gameOverMessage;
 };
 
 Planet.prototype.alertWin = function alertWin(gamestate){
@@ -261,8 +292,6 @@ Planet.prototype.alertWin = function alertWin(gamestate){
   messageTag.html(winMessage);
   var alertBox = $('.gameAlert');
   alertBox.html(messageTag);
-  console.log('wm ' + winMessage);
-  //appendGameMessage(winMessage);
   return alertBox;
 };
 
@@ -568,7 +597,7 @@ function renderPlayerOneName(gamestate) {
   var playerOneNameDiv = $('<div>');
   playerOneNameDiv.addClass('playerOne name');
   var playerOneName = $('<h5>');
-  playerOneName.html('High Commander <br>' + gamestate.playerOne);
+  playerOneName.html('Commander <br>' + gamestate.playerOne);
   playerOneNameDiv.append(playerOneName);
 
 return playerOneNameDiv;
@@ -611,7 +640,7 @@ function renderPlayerTwoScore(gamestate) {
   var playerTwoScoreDiv = $('<div>')
   playerTwoScoreDiv.addClass('playerTwo score');
   var playerTwo = $('<h5>');
-  playerTwo.html('Opponent Score <br>' + gamestate.playerTwoPoints);
+  playerTwo.html('Opponent <br>' + gamestate.playerTwoPoints);
   playerTwoScoreDiv.append(playerTwo);
 
 return playerTwoScoreDiv;
