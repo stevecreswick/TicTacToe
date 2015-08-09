@@ -129,14 +129,18 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         parseInt(square.attr('col'))
       ];
 
-      if (scope.gameboard[index[0]][index[1]] === 0){
+      if (scope.winner !== null){
+        console.log('You cannot click...this planet is conquered.');
+      }
+      else if (scope.gameboard[index[0]][index[1]] === 0){
         scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
         console.log(scope.winner);
         console.log(scope);
         console.log('points 1:' + gamestate.playerOnePoints);
         console.log('points 2:' + gamestate.playerTwoPoints);
-      } else {
+      }
+      else {
         console.log('You cannot make this move.');
       }
   });
@@ -181,7 +185,7 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
-  console.log('player turn function ' + gamestate.playerOnePoints);
+
   this.colorBoxOnClick(boxNode, gamestate);
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
@@ -226,12 +230,12 @@ Planet.prototype.rowChecker = function rowChecker(gamestate){
         rowSum += this.gameboard[r][c];
 
         if  (rowSum === 3) {
-          this.winner = gamestate.playerOne;
+          this.winner = 'playerOne';
           gamestate.playerOnePoints += 5;
           return gamestate;
         }
         else if (rowSum === -3) {
-          this.winner = gamestate.playerTwo;
+          this.winner = 'playerTwo';
           gamestate.playerTwoPoints += 5;
           return gamestate;
         }
@@ -248,11 +252,11 @@ Planet.prototype.columnChecker = function columnChecker(gamestate){
       for (var r = 0; r < 3; r++) {
         colSum += this.gameboard[r][c];
         if  (colSum === 3) {
-          this.winner = gamestate.playerOne;
+          this.winner = 'playerOne';
           gamestate.playerOnePoints += 5;
           return gamestate;        }
         else if (colSum === -3) {
-          this.winner = gamestate.playerTwo;
+          this.winner = 'playerTwo';
           gamestate.playerTwoPoints += 5;
           return gamestate;        }
       }
@@ -266,12 +270,12 @@ Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestat
   diagonalSum = this.gameboard[2][0] + this.gameboard[1][1] + this.gameboard[0][2];
 
   if  (diagonalSum === 3) {
-    this.winner = gamestate.playerOne;
+    this.winner = 'playerOne';
     gamestate.playerOnePoints += 5;
     return gamestate;
   }
   else if (diagonalSum === -3) {
-    this.winner = gamestate.playerTwo;
+    this.winner = 'playerTwo';
     gamestate.playerTwoPoints += 5;
     return gamestate;
   }
@@ -284,11 +288,11 @@ Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
     for (var i = 0; i < 3; i++) {
       diagonalSum += this.gameboard[i][i];
       if  (diagonalSum === 3) {
-        this.winner = gamestate.playerOne;
+        this.winner = 'playerOne';
         gamestate.playerOnePoints += 5;
         return gamestate;      }
       else if (diagonalSum === -3) {
-        this.winner = gamestate.playerTwo;
+        this.winner = 'playerTwo';
         gamestate.playerTwoPoints += 5;
         return gamestate;      }
 }
@@ -397,7 +401,7 @@ http://www.hi-wallpapers.com/uploads/image/201302/07/1360187501.jpg
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with the interplanetary forces.  You must stay on board and take charge of the navy or we will all perish. <br><br> Congratulations...High Commander.  <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with our forces.  You must stay on board and take charge of the navy or we will all perish. Congratulations...<br><br>High Commander.  <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
 
     welcomeBox.append(welcomeMessage);
     return welcomeBox;
