@@ -11,7 +11,8 @@ var gamestate = {
   playerOneTurn: true,
   playerOnePoints: 0,
   playerTwoPoints: 0,
-  winner: null
+  winner: null,
+  computerOpponent: true
 }
 
 
@@ -575,8 +576,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
     var menu = $('<div>').addClass('welcome-menu');
 
     var welcomeBox = this.renderWelcomeBox();
-    var nameForm = this.renderNameForm(gamestate);
-    menu.append(welcomeBox, nameForm);
+    menu.append(welcomeBox);
 
     return menu;
   };
@@ -584,9 +584,10 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with our forces.  You must stay on board and take charge of the navy or we will all perish. Congratulations...<br><br>High Commander.  <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
-
-    welcomeBox.append(welcomeMessage);
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with our forces.  You must stay on board and take charge of the navy or we will all perish. <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
+    //var playerOptions = this.renderOpponentOptions();
+    var nameForm = this.renderNameForm(gamestate);
+    welcomeBox.append(welcomeMessage, nameForm);
     return welcomeBox;
   };
 
@@ -602,7 +603,8 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
         input.attr('placeholder', 'enter name')
         input.attr('id', 'name-entry');
       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
-      form.append(input, submitButton);
+      var opponentOptions = this.renderOpponentOptions();
+      form.append(input, submitButton, opponentOptions);
       this.bindNameForm(form, gamestate);
       return form;
     }
@@ -615,7 +617,10 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           var nameField = $(this).find('input[name="playerName[name]"]');
           var nameText = nameField.val();
           console.log(nameText);
-
+          var opponentField = $(this).find('opponent-choice[choice]:checked');
+          console.log('field ' + opponentField);
+          var opponentChoice = opponentField.val();
+          console.log('Opponent Choice: ' + opponentChoice);
 
           scope.appendGameName();
           //scope.appendName(nameText);
@@ -628,6 +633,29 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           return scope;
         });
     };
+
+    TicTacToe.prototype.renderOpponentOptions = function renderOpponentOptions(){
+      var radioContainer = $('<div>').addClass('opponent-options');
+
+      var computerOpponent = $("<input>");
+      computerOpponent.attr('type', "radio").attr('id', 'opponent-radio').attr('value', 'computer').attr('label', 'Computer').attr('name', 'opponent-choice[choice]').attr('checked', 'true');
+      computerOpponent.css({'display': 'inline-block'});
+      computerOpponent.text('Computer');
+
+
+      var playerOpponent = $("<input>");
+      playerOpponent.attr('type', "radio").attr('id', 'opponent-radio').attr('value', 'player').attr('label', 'Player').attr('name', 'opponent-choice[choice]');
+      playerOpponent.css({'display': 'inline-block'});
+
+      playerOpponent.text('Player');
+
+      radioContainer.append(computerOpponent, playerOpponent);
+
+      return radioContainer;
+
+    };
+
+
 
     TicTacToe.prototype.appendGameName = function appendGameName(){
       var gameName = $('<h1>').text('Space Tic Tac Toe');
