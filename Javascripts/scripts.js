@@ -272,7 +272,11 @@ function generateRandomBox(randomIndex) {
 }
 
 function checkIfClicked(boxNode) {
-
+  if (boxNode.data('clicked') === true){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
