@@ -603,8 +603,10 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
         input.attr('placeholder', 'enter name')
         input.attr('id', 'name-entry');
       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
-      var opponentOptions = this.renderOpponentOptions();
-      form.append(input, submitButton, opponentOptions);
+      var playerOption = this.renderPlayerOption()
+      var computerOption = this.renderComputerOption();
+
+      form.append(input, submitButton, playerOption, computerOption);
       this.bindNameForm(form, gamestate);
       return form;
     }
@@ -617,10 +619,13 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           var nameField = $(this).find('input[name="playerName[name]"]');
           var nameText = nameField.val();
           console.log(nameText);
-          var opponentField = $(this).find('opponent-choice[choice]:checked');
+          var opponentField = $('input:checked').val();
+
+          //function that takes opponenent Field and applies to Logic
+
           console.log('field ' + opponentField);
-          var opponentChoice = opponentField.val();
-          console.log('Opponent Choice: ' + opponentChoice);
+          //var opponentChoice = opponentField.val();
+          //console.log('Opponent Choice: ' + opponentChoice);
 
           scope.appendGameName();
           //scope.appendName(nameText);
@@ -634,14 +639,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
         });
     };
 
-    TicTacToe.prototype.renderOpponentOptions = function renderOpponentOptions(){
-      var radioContainer = $('<div>').addClass('opponent-options');
-
-      var computerOpponent = $("<input>");
-      computerOpponent.attr('type', "radio").attr('id', 'opponent-radio').attr('value', 'computer').attr('label', 'Computer').attr('name', 'opponent-choice[choice]').attr('checked', 'true');
-      computerOpponent.css({'display': 'inline-block'});
-      computerOpponent.text('Computer');
-
+    TicTacToe.prototype.renderPlayerOption = function renderPlayerOption(){
 
       var playerOpponent = $("<input>");
       playerOpponent.attr('type', "radio").attr('id', 'opponent-radio').attr('value', 'player').attr('label', 'Player').attr('name', 'opponent-choice[choice]');
@@ -649,12 +647,20 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
 
       playerOpponent.text('Player');
 
-      radioContainer.append(computerOpponent, playerOpponent);
-
-      return radioContainer;
+      return playerOpponent;
 
     };
 
+    TicTacToe.prototype.renderComputerOption = function renderComputerOption(){
+
+      var computerOpponent = $("<input>");
+      computerOpponent.attr('type', "radio").attr('id', 'opponent-radio').attr('value', 'computer').attr('label', 'Computer').attr('name', 'opponent-choice[choice]').attr('checked', 'true');
+      computerOpponent.css({'display': 'inline-block'});
+      computerOpponent.text('Computer');
+
+      return computerOpponent;
+
+    };
 
 
     TicTacToe.prototype.appendGameName = function appendGameName(){
