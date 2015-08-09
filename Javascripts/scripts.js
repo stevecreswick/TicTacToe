@@ -128,7 +128,6 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
       ];
 
       square.data('clicked', true);
-      console.log('square clicked ' + square.data('clicked'));
 
       if (scope.winner !== null){
         var gameAlert = renderGameAlert('That planet is already claimed.');
@@ -198,10 +197,12 @@ Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
           'backgroundColor': gamestate.playerOneColor,
           'opacity': '0.6',
         });
+        planetBoxes.eq(i).data('clicked', true);
       }
     } else if (this.winner = 'playerTwo'){
       for (var x = 0; x < planetBoxes.length; x++) {
         planetBoxes.eq(x).css({'backgroundColor': gamestate.playerTwoColor});
+        planetBoxes.eq(i).data('clicked', true);
       }
     }
 
@@ -266,7 +267,8 @@ function generateRandomIndex() {
 
 }
 
-function generateRandomBox(randomIndex) {
+function generateRandomBox() {
+  var randomIndex = generateRandomIndex();
   var box = $('.box').eq(randomIndex);
   return box;
 }
@@ -276,6 +278,17 @@ function checkIfClicked(boxNode) {
     return true;
   } else {
     return false;
+  }
+}
+
+function findUnclickedBox() {
+  var randomBox = generateRandomBox();
+  var clickTest = checkIfClicked(randomBox);
+
+  if (clickTest === true) {
+    console.log('Box has been clicked');
+  } else if (clickTest === false){
+    randomBox.css({'backgroundColor': gamestate.playerTwoColor});
   }
 }
 
