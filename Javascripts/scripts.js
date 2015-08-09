@@ -266,6 +266,15 @@ function generateRandomIndex() {
 
 }
 
+function generateRandomBox(randomIndex) {
+  var box = $('.box').eq(randomIndex);
+  return box;
+}
+
+function checkIfClicked(boxNode) {
+
+}
+
 
 
 //  --- Computer AI
