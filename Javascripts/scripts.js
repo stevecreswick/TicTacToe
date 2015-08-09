@@ -16,11 +16,6 @@ var gamestate = {
 }
 
 
-function gameOver(gamestate) {
-
-}
-
-
 // -- Create the Universe
 
 function Universe(options) {
@@ -166,15 +161,28 @@ Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
 
     if (gamestate.playerOneTurn === true){
       boxNode.css({'backgroundColor': gamestate.playerOneColor});
-      gamestate.playerOneTurn = false;
     } else {
       boxNode.css({'backgroundColor': gamestate.playerTwoColor});
-      gamestate.playerOneTurn = true;
       }
   } else {
     console.log('This planet has been captured');
   }
 };
+
+Planet.prototype.toggleTurn = function toggleTurn(gamestate){
+
+  if (this.winner === null) {
+
+    if (gamestate.playerOneTurn === true){
+      console.log('toggling turn')
+      gamestate.playerOneTurn = false;
+    } else {
+      gamestate.playerOneTurn = true;
+      }
+  }
+};
+
+
 
 Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
 
@@ -226,8 +234,14 @@ Planet.prototype.appendGameOverMessage = function appendGameOverMessage(gamestat
 
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
-
-  this.colorBoxOnClick(boxNode, gamestate);
+  if (gamestate.computerOpponent === false) {
+    this.colorBoxOnClick(boxNode, gamestate);
+    this.toggleTurn(gamestate);
+    console.log('player 2 turn');
+  } else if (gamestate.computerOpponent === true) {
+    this.colorBoxOnClick(boxNode, gamestate);
+    console.log('computer player turn')
+  }
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
   this.checkPlanetWinner(gamestate);
@@ -365,7 +379,8 @@ function bindRestartButton(button){
         playerOneTurn: true,
         playerOnePoints: 0,
         playerTwoPoints: 0,
-        winner: null
+        winner: null,
+        computerOpponent: true
       };
 
       init();
@@ -621,12 +636,8 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           console.log(nameText);
           var opponentField = $('input:checked').val();
 
-          //function that takes opponenent Field and applies to Logic
 
-          console.log('field ' + opponentField);
-          //var opponentChoice = opponentField.val();
-          //console.log('Opponent Choice: ' + opponentChoice);
-
+          scope.applyOpponentToGameState(opponentField, gamestate);
           scope.appendGameName();
           //scope.appendName(nameText);
           scope.applyNameToGameLogic(nameText);
@@ -637,6 +648,15 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           scope.removeStartGameName();
           return scope;
         });
+    };
+
+    TicTacToe.prototype.applyOpponentToGameState = function applyOpponentToGameState(opponent, gamestate){
+      if (opponent === 'player'){
+        gamestate.computerOpponent = false;
+      } else if (opponent === 'computer') {
+        gamestate.computerOpponent = true;
+      }
+
     };
 
     TicTacToe.prototype.renderPlayerOption = function renderPlayerOption(){
