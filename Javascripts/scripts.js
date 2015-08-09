@@ -127,6 +127,9 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         parseInt(square.attr('col'))
       ];
 
+      square.data('clicked', true);
+      console.log('square clicked ' + square.data('clicked'));
+
       if (scope.winner !== null){
         var gameAlert = renderGameAlert('That planet is already claimed.');
       }
@@ -242,6 +245,8 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
     this.colorBoxOnClick(boxNode, gamestate);
     console.log('computer player turn')
   }
+
+
   //this.togglePlayerTurn(); //move into TicTacToe Function
 
   this.checkPlanetWinner(gamestate);
