@@ -3,12 +3,32 @@ body {
 }
 
 h1 {
-  color: rgb(102,51,153);
-  font-family: 'Roboto', sans-serif;
+  color: rgb(255,215,0);
+  font-family: 'Black Ops One', cursive;
   font-size: 50px;
   font-weight: bolder;
   margin-top: -1%;
   margin-bottom: -1%;
+  margin-left: -1%;
+  height: 1.5em;
+  text-align: left;
+  width: 100%;
+  background: rgba(0,0,0,.5);
+  padding-top: 1%;
+  padding-left: 3%;
+}
+
+h2 {
+  float:right;
+  color: rgb(255,215,0);
+  font-family: 'Black Ops One', cursive;  font-size: 65px;
+  font-weight: bolder;
+  margin-right: 2%;
+  text-align: left;
+  border: solid grey 1px;
+  border-radius: 5px;
+  padding: 1%;
+  background: rgba(0,0,0,0.7);
 }
 
 h3 {
@@ -20,17 +40,24 @@ h3 {
 }
 
 h4 {
-  font-size: 24px;
+  font-size: 16px;
   color: green;
   font-family: 'Roboto', sans-serif;
   margin-top: -3%;
 
 }
 
+h5 {
+ font-size: 14px;
+ font-weight: bold;
+ font-family: 'Roboto', sans-serif;
+
+}
+
 
 #start-menu-container {
   float:left;
-  width: 90%;
+  width: 50%;
   height: 80%;
   text-align: center;
   display: inline;
@@ -40,14 +67,14 @@ h4 {
   padding-top: 1em;
   border-radius: 5px;
   margin-top: 5%;
-  margin-left: 5%;
+  margin-left: 1%;
 }
 
 .welcome-menu {
   display:inline-block;
-  height: 75%;
+  height: 85%;
   width: 75%;
-  background: black;
+  background: rgba(119,136,153,0.5);
   padding: 5%;
   text-align: center;
   border: solid grey 2px;
@@ -55,18 +82,23 @@ h4 {
 }
 
 .welcome-box {
-  height: 50%;
+  height: 70%;
   vertical-align: middle;
+  background: black;
   font-size: 50px;
   padding-top: 5%;
   padding-left: 2%;
   padding-right: 2%;
   text-align: left;
+  margin-bottom: 10%;
+  overflow: auto;
+  border: 2px grey solid;
 
 }
 
 #start-menu-container .welcome-menu .welcome-message {
-  color: green;
+  color: rgb(0,128,128);
+
 }
 
 
@@ -78,7 +110,6 @@ h4 {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  border: 10px green solid;
   display: block;
 }
 
@@ -87,7 +118,13 @@ h4 {
   height: 25%;
   display: inline-block;
   text-align: center;
-  background: url('http://scienceblogs.com/startswithabang/files/2013/02/2xcluster.jpg');
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border: grey 1px solid;
+  border-radius: 5px;
+
+  /*background: url('http://scienceblogs.com/startswithabang/files/2013/02/2xcluster.jpg');*/
+  background: rgba(70,130,180,0.2);
 
 }
 
@@ -97,13 +134,19 @@ h4 {
   display: inline-block;
   border: dashed green 1px;
   border-radius: 3px;
-  background: url('http://www.uncoverscience.com/files/2013/10/cool-wallpapers-earth-space-hd-wallpaper-of-galaxy-hdwallpaper-200x200.jpg');
+  /*background: url('http://www.uncoverscience.com/files/2013/10/cool-wallpapers-earth-space-hd-wallpaper-of-galaxy-hdwallpaper-200x200.jpg');*/
   background-position: center;
   background-repeat: no-repeat;
   background-size:contain;
   padding: 2%;
   margin-top: 1%;
   margin-left: 1%;
+  background: black;
+}
+
+.board:hover {
+  height: 33%;
+  width: 33%;
 }
 
 .box {
@@ -127,54 +170,51 @@ h4 {
 }
 
 #name-entry {
-  text-align:center;
-  width: 33%;
-  height: 5em;
-  margin-top: 7%;
+  text-align:left;
+  color: rgb(0,128,128);
+  font-weight: bolder;
+  font-size: 16px;
+  width: 60%;
+  height: 3em;
+  font-size: 24px;
   margin-right: 5%;
-  background: white;
-  overflow: auto;
-  border: red 1px solid;
-  padding: -5%;
+  background: black;
+  border: 2px solid;
+  border-color: rgb(0,128,128);
+  padding-left: 5%;
 }
 
 
-.button {
-  width: 10%;
-  background-color: 'red';
-  margin-left: 1%;
-  text-align: left;
-
-}
 
 ::-webkit-input-placeholder {
-   color: green;
-   font-size: 16px;
+   color: white;
+   font-size: 24px;
    padding: -2%;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: green;
-   font-size: 16px;
+   color: white;
+   font-size: 24px;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: green;
-   font-size: 16px;
+   color: white;
+   font-size: 24px;
 }
 
 input.enter-name-button {
-width: 25%;
+width: 28%;
 height: 3em;
 display: inline-block;
 background:black;
-color:green;
+color:white;
 font-size: 24px;
 font-weight: bolder;
 -webkit-border-radius: 2px;
 -moz-border-radius: 2px;
 border-radius: 2px;
-border: 1p solid green;
+border: 2px solid;
+border-color: rgb(0,128,128);
 }
 input.enter-name-button:hover {
 background:red;
@@ -182,60 +222,77 @@ color:white;
 }
 
 #gamestate-bar {
-  height: 5em;
+  height: 7em;
   width: 90%;
-  background: grey;
+  background: rgba(47,79,79,0.7);
   text-align: center;
   padding-top: 1em;
   display: block;
-  margin-top: 1em;
   margin-left: 5%;
+  border: grey 1px solid;
+  border-radius: 5px;
 }
 
 
 .info {
   display: inline-block;
-  width: 33%;
+  width: 28%;
+  height: 80%;
+  background: black;
+  border: green 1px solid;
+  border-radius: 5px;
+}
+
+
+
+.gameAlert h5{
+  color: white;
+  font-size: 16px;
+  font-family: 'Black Ops One', cursive;
 }
 
 .playerOne {
-  background: red;
   float: left;
-  height: 80%;
-  color: blue;
+  color: lightgreen;
   display: block;
+  margin-left: 1%;
 }
 
 .playerTwo {
   float: right;
   height: 80%;
-  background: blue;
+  margin-right: 1%;
+  color: red;
 }
 
+.score {
+  color: rgb(255,215,0);
+
+}
 .playerOne .name {
-  height: 2em;
+  height: 100%;
+  width: 45%;
   float: left;
   display: inline-block;
-  background: orange;
 }
 
 .playerOne .score {
-  height: 2em;
+  height: 100%;
+  width: 45%;
   float: right;
   display: inline-block;
-  background: green;
 }
 
 .playerTwo .name {
-  height: 2em;
+  height: 100%;
+  width: 33%;
   float: right;
   display: block;
-  background: orange;
 }
 
 .playerTwo .score {
-  height: 2em;
+  height: 100%;
+  width: 33%;
   float: left;
   display: inline-block;
-  background: green;
 }

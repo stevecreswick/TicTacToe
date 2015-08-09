@@ -3,7 +3,7 @@ console.log('...loaded');
 var gamestate = {
   active: true,
   playerOne: 'Steve',
-  playerTwo: 'Kathew',
+  playerTwo: 'Emperor Zorgg',
   playerOneColor: 'red',
   playerTwoColor: 'blue',
   playerOneMarker: 1,
@@ -351,11 +351,37 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   var container = $('<div>').attr('id', "start-menu-container");
 
   container.append(this.renderWelcomeMenu(gamestate));
+  this.startBackground();
+  this.startGameName();
 
   return $('body').append(container);
 };
 
 // --- Start Menu Parts
+  TicTacToe.prototype.startBackground = function startBackground(){
+
+    $('body').css({'background': 'url(\'http://img2.wikia.nocookie.net/__cb20130118053308/starwars/images/9/9c/DCS_Destruction.png\')'});
+    return $('body');
+  };
+
+  TicTacToe.prototype.gameBackground = function gameBackground(){
+    $('body').css({'background': 'url(\'http://apod.nasa.gov/apod/image/1004/m66_hst_big.jpg\')'});
+    $('body').css({'backgroundSize': 'cover'});
+    return $('body');
+  };
+
+
+http://www.hi-wallpapers.com/uploads/image/201302/07/1360187501.jpg
+  TicTacToe.prototype.startGameName = function startGameName(){
+    var gameName = $('<h2>').html('Space <br> Tic Tac Toe');
+    return $('body').append(gameName);
+  };
+
+  TicTacToe.prototype.removeStartGameName = function removeStartGameName(){
+    var gameName = $('h2');
+    gameName.remove();
+    return $('body');
+  };
 
   TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu(gamestate) {
 
@@ -371,7 +397,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> The ship is in critical condition.  You are the only surviving commander.  The interplanetary forces are awaiting orders. <br><br>You must take charge of the navy or we will all perish. <br><br>Launch Tactical Display:');
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with the interplanetary forces.  You must stay on board and take charge of the navy or we will all perish. <br><br> Congratulations...High Commander.  <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
 
     welcomeBox.append(welcomeMessage);
     return welcomeBox;
@@ -386,7 +412,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
       var input = $('<input>');
         input.attr('type', 'text');
         input.attr('name', 'playerName[name]');
-        input.attr('placeholder', 'enter your name')
+        input.attr('placeholder', 'enter name')
         input.attr('id', 'name-entry');
       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
       form.append(input, submitButton);
@@ -409,7 +435,9 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           scope.applyNameToGameLogic(nameText);
           scope.universe.buildUniverse();
           renderMenuBar(gamestate);
+          scope.gameBackground();
           scope.removeStartMenu();
+          scope.removeStartGameName();
           return scope;
         });
     };
@@ -448,7 +476,8 @@ function renderMenuBar(gamestate) {
   menuBar.attr('id', 'gamestate-bar');
   var playerOneInfo = this.renderPlayerOneInfo(gamestate);
   var playerTwoInfo = this.renderPlayerTwoInfo(gamestate);
-  menuBar.append(playerOneInfo, playerTwoInfo);
+  var gameMessage = this.renderGameAlert('testing...one, two, three...');
+  menuBar.append(playerOneInfo, gameMessage, playerTwoInfo);
 
   return $('body').append(menuBar);
 };
@@ -476,7 +505,7 @@ function renderPlayerOneName(gamestate) {
   var playerOneNameDiv = $('<div>');
   playerOneNameDiv.addClass('playerOne name');
   var playerOneName = $('<h5>');
-  playerOneName.html('High Commander ' + gamestate.playerOne);
+  playerOneName.html('High Commander <br>' + gamestate.playerOne);
   playerOneNameDiv.append(playerOneName);
 
 return playerOneNameDiv;
@@ -487,7 +516,7 @@ function renderPlayerOneScore(gamestate) {
   playerOneScoreDiv.addClass('playerOne score');
   var playerOne = $('<h5>');
   console.log('renderPlayerOnePoint: ' + gamestate.playerOnePoints);
-  playerOne.html('Score: ' + gamestate.playerOnePoints);
+  playerOne.html('Player Score <br>' + gamestate.playerOnePoints);
   playerOneScoreDiv.append(playerOne);
 
 return playerOneScoreDiv;
@@ -507,9 +536,9 @@ function renderPlayerTwoInfo(gamestate) {
 
 function renderPlayerTwoName(gamestate) {
   var playerTwoNameDiv = $('<div>')
-  playerTwoNameDiv.addClass('playerOne name');
+  playerTwoNameDiv.addClass('playerTwo name');
   var playerTwoName = $('<h5>');
-  playerTwoName.text('Attacker: ' + gamestate.playerTwo);
+  playerTwoName.html(gamestate.playerTwo);
   playerTwoNameDiv.append(playerTwoName);
 
   return playerTwoNameDiv;
@@ -517,16 +546,29 @@ function renderPlayerTwoName(gamestate) {
 
 function renderPlayerTwoScore(gamestate) {
   var playerTwoScoreDiv = $('<div>')
-  playerTwoScoreDiv.addClass('playerOne score');
+  playerTwoScoreDiv.addClass('playerTwo score');
   var playerTwo = $('<h5>');
-  playerTwo.html('Score :' + gamestate.playerTwoPoints);
+  playerTwo.html('Opponent Score <br>' + gamestate.playerTwoPoints);
   playerTwoScoreDiv.append(playerTwo);
 
 return playerTwoScoreDiv;
 };
 
 
+function renderGameAlert(message){
+  var gameAlert = $('<div>');
+  gameAlert.addClass('info gameAlert')
+  var gameAlertHeader = $('<h5>');
+  gameAlertHeader.html(message);
+  gameAlert.append(gameAlertHeader);
+  return gameAlert;
+};
 
+function removeGameAlert(){
+  var gameAlert = $('.gameAlert');
+  gameAlert.remove();
+  return $('body');
+}
 
   // --- MENU BAR End
 
