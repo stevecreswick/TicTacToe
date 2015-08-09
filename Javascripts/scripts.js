@@ -256,6 +256,21 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 };
 
 
+// Computer AI ---
+
+function generateRandomIndex() {
+  var maxBoxes = $('.box').length;
+  var randomNumber = Math.floor(Math.random()*maxBoxes);
+
+  return randomNumber;
+
+}
+
+
+
+//  --- Computer AI
+
+
 
 //  Win Logic Start ---
 
@@ -398,8 +413,6 @@ function removeRestartMenu() {
 
   restartMenu.remove();
 }
-
-// ---- End Working
 
 
 Planet.prototype.alertWin = function alertWin(gamestate){
