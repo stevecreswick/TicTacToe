@@ -74,6 +74,7 @@ function Planet(name) {
   this.gameboard = gameboard;
   this.winner = null;
   this.winType = null;
+  this.background = null;
 
 }
 
@@ -84,31 +85,31 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
   //Top Row
   var topRow = $('<div>').addClass('row top-row');
-  var columnOneTop = $('<div>').addClass('box column-one').attr('row', 0).attr('col', 0);
+  var columnOneTop = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 0).attr('col', 0);
   this.bindBox(columnOneTop, gamestate);
-  var columnTwoTop = $('<div>').addClass('box column-two').attr('row', 0).attr('col', 1);
+  var columnTwoTop = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 0).attr('col', 1);
   this.bindBox(columnTwoTop, gamestate);
-  var columnThreeTop = $('<div>').addClass('box column-three').attr('row', 0).attr('col', 2);
+  var columnThreeTop = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 0).attr('col', 2);
   this.bindBox(columnThreeTop, gamestate);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box column-one').attr('row', 1).attr('col', 0);
+  var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0);
   this.bindBox(columnOneMid, gamestate);
-  var columnTwoMid = $('<div>').addClass('box column-two').attr('row', 1).attr('col', 1);
+  var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1);
   this.bindBox(columnTwoMid, gamestate);
-  var columnThreeMid = $('<div>').addClass('box column-three').attr('row', 1).attr('col', 2);
+  var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2);
   this.bindBox(columnThreeMid, gamestate);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
   //Bottom Row
   var bottomRow = $('<div>').addClass('row bottom-row');
-  var columnOneBot = $('<div>').addClass('box column-one').attr('row', 2).attr('col', 0);
+  var columnOneBot = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 2).attr('col', 0);
   this.bindBox(columnOneBot, gamestate);
-  var columnTwoBot = $('<div>').addClass('box column-two').attr('row', 2).attr('col', 1);
+  var columnTwoBot = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 2).attr('col', 1);
   this.bindBox(columnTwoBot, gamestate);
-  var columnThreeBot = $('<div>').addClass('box column-three').attr('row', 2).attr('col', 2);
+  var columnThreeBot = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 2).attr('col', 2);
   this.bindBox(columnThreeBot, gamestate);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
@@ -130,7 +131,9 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
       ];
 
       if (scope.winner !== null){
-        console.log('You cannot click...this planet is conquered.');
+        var gameAlert = renderGameAlert('That planet is already claimed.');
+        //removeMenuBar();
+        //renderMenuBar(gamestate, gameAlert);
       }
       else if (scope.gameboard[index[0]][index[1]] === 0){
         scope.mapToArray(index[0],index[1], gamestate);
@@ -173,6 +176,27 @@ Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
   }
 };
 
+Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
+
+  var planetClass = ('.' + this.name);
+  var planetBoxes = $(planetClass);
+
+    if (this.winner === 'playerOne'){
+      for (var i = 0; i < planetBoxes.length; i++) {
+        planetBoxes.eq(i).css({
+          'backgroundColor': gamestate.playerOneColor,
+          'opacity': '0.6',
+        });
+      }
+    } else if (this.winner = 'playerTwo'){
+      for (var x = 0; x < planetBoxes.length; x++) {
+        planetBoxes.eq(x).css({'backgroundColor': gamestate.playerTwoColor});
+      }
+    }
+
+      return $('body');
+};
+
 Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
   if (gamestate.playerOnePoints > 67){
     console.log('Player One Won: ' + gamestate.playerOnePoints);
@@ -208,13 +232,50 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
     //this.tieCheck();
 
     if (this.winner !== null) {
-    console.log('The winner is ' + this.winner);
-    console.log('insert end game funciton');
+    this.colorAllBoxes(gamestate);
+
     removeMenuBar();
     renderMenuBar(gamestate);
+    this.alertWin(gamestate);
     //alter gamestate
     }
 }
+
+Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
+  var winMessage;
+  var playerOneName = gamestate.playerOne;
+  var playerTwoName = gamestate.playerTwo;
+  console.log(gamestate);
+  if (this.winner === 'playerOne'){
+    winMessage = this.name + ' has been claimed by <br> High Commaner ' + playerOneName;
+  } else if (this.winner === 'playerTwo') {
+    winMessage = this.name + ' has been claimed by <br>' + playerTwoName;
+  }
+
+  return winMessage;
+};
+
+Planet.prototype.alertWin = function alertWin(gamestate){
+  var winMessage = this.generateWinMessage(gamestate);
+  var messageTag =  $('<h5>');
+  messageTag.html(winMessage);
+  var alertBox = $('.gameAlert');
+  alertBox.html(messageTag);
+  console.log('wm ' + winMessage);
+  //appendGameMessage(winMessage);
+  return alertBox;
+};
+
+Planet.prototype.alertGameWin = function alertGameWin(gamestate){
+  var winMessage = this.generateWinMessage(gamestate);
+  var messageTag =  $('<h5>');
+  messageTag.html(winMessage);
+  var alertBox = $('.gameAlert');
+  alertBox.html(messageTag);
+  console.log('wm ' + winMessage);
+  //appendGameMessage(winMessage);
+  return alertBox;
+};
 
 Planet.prototype.tieCheck = function tieCheck(){
 
@@ -374,8 +435,6 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
     return $('body');
   };
 
-
-http://www.hi-wallpapers.com/uploads/image/201302/07/1360187501.jpg
   TicTacToe.prototype.startGameName = function startGameName(){
     var gameName = $('<h2>').html('Space <br> Tic Tac Toe');
     return $('body').append(gameName);
@@ -480,7 +539,7 @@ function renderMenuBar(gamestate) {
   menuBar.attr('id', 'gamestate-bar');
   var playerOneInfo = this.renderPlayerOneInfo(gamestate);
   var playerTwoInfo = this.renderPlayerTwoInfo(gamestate);
-  var gameMessage = this.renderGameAlert('testing...one, two, three...');
+  var gameMessage = this.renderGameAlert();
   menuBar.append(playerOneInfo, gameMessage, playerTwoInfo);
 
   return $('body').append(menuBar);
@@ -568,8 +627,16 @@ function renderGameAlert(message){
   return gameAlert;
 };
 
-function removeGameAlert(){
+function appendGameMessage(message){
   var gameAlert = $('.gameAlert');
+  console.log(message);
+  console.log(gameAlert);
+  gameAlert.html(message);
+  return $('body').append(gameAlert);
+};
+
+function removeGameAlert(){
+  var gameAlert = $('gameAlert');
   gameAlert.remove();
   return $('body');
 }
