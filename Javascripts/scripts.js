@@ -660,7 +660,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
 
     var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. Only you can communicate with our forces.  You must stay on board and take charge of the navy or we will all perish. <br><br>Please send me your name to include on the memorial should you succed before your ship runs out of oxygen or the invaders enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
+    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. <br><br>You must stay on board and take charge of the navy or we will all perish. <br><br>Stop the invaders before they enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
     //var playerOptions = this.renderOpponentOptions();
     var nameForm = this.renderNameForm(gamestate);
     welcomeBox.append(welcomeMessage, nameForm);
@@ -821,7 +821,7 @@ function renderPlayerOneScore(gamestate) {
   playerOneScoreDiv.addClass('playerOne score');
   var playerOne = $('<h5>');
   console.log('renderPlayerOnePoint: ' + gamestate.playerOnePoints);
-  playerOne.html('Player Score <br>' + gamestate.playerOnePoints);
+  playerOne.html(gamestate.playerOnePoints);
   playerOneScoreDiv.append(playerOne);
 
 return playerOneScoreDiv;
@@ -853,7 +853,7 @@ function renderPlayerTwoScore(gamestate) {
   var playerTwoScoreDiv = $('<div>')
   playerTwoScoreDiv.addClass('playerTwo score');
   var playerTwo = $('<h5>');
-  playerTwo.html('Opponent <br>' + gamestate.playerTwoPoints);
+  playerTwo.html(gamestate.playerTwoPoints);
   playerTwoScoreDiv.append(playerTwo);
 
 return playerTwoScoreDiv;
@@ -900,27 +900,27 @@ var galaxyOne = new Galaxy({name: 'Steve', planets: [
 ]});
 
 var galaxyTwo = new Galaxy({name: 'steve2', planets: [
-  new Planet('Tatooine2'),
-  new Planet('Endor2'),
-  new Planet('Coruscant2'),
-  new Planet('Bespin2'),
-  new Planet('Hoth2'),
-  new Planet('Dagobah2'),
-  new Planet('Alderaan2'),
-  new Planet('Kashyyyk2'),
-  new Planet('Corellia2')
+  new Planet('Bith'),
+  new Planet('Corrida'),
+  new Planet('Ord Mantell'),
+  new Planet('Dathomir'),
+  new Planet('Sullust'),
+  new Planet('Ryloth'),
+  new Planet('Mandalore'),
+  new Planet('Bothawui'),
+  new Planet('Kuat')
 ]});
 
 var galaxyThree = new Galaxy({name: 'steve3', planets: [
-  new Planet('Tatooine3'),
-  new Planet('Endor3'),
-  new Planet('Coruscant3'),
-  new Planet('Bespin3'),
-  new Planet('Hoth3'),
-  new Planet('Dagobah3'),
-  new Planet('Alderaan3'),
-  new Planet('Kashyyyk3'),
-  new Planet('Corellia3')
+  new Planet('Cerea'),
+  new Planet('Colla IV'),
+  new Planet('Cynestra'),
+  new Planet('Felucia'),
+  new Planet('Galtor VI'),
+  new Planet('Ogana Major'),
+  new Planet('Umbara'),
+  new Planet('Tibrin'),
+  new Planet('Solstice V')
 ]});
 
 

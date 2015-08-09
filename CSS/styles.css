@@ -135,14 +135,14 @@ h5 {
   display: inline-block;
   border: dashed green 1px;
   border-radius: 3px;
-  /*background: url('http://www.uncoverscience.com/files/2013/10/cool-wallpapers-earth-space-hd-wallpaper-of-galaxy-hdwallpaper-200x200.jpg');*/
+  background: url('http://www.uncoverscience.com/files/2013/10/cool-wallpapers-earth-space-hd-wallpaper-of-galaxy-hdwallpaper-200x200.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size:contain;
   padding: 2%;
   margin-top: 1%;
   margin-left: 1%;
-  background: black;
+  background-color: black;
 }
 
 
@@ -362,4 +362,58 @@ input #playerOpponent {
   height: 3em;
   background: white;
   color: black;
+}
+
+@media (max-width: 785px) {
+  #start-menu-container{
+    width: 100%;
+    height: 30em;
+    text-align: center;
+    margin-left:-1%;
+    margin-top: -7%;
+  }
+
+  input.enter-name-button {
+  font-size: 18px;
+  }
+
+  .welcome-box {
+    height: 8em;
+  }
+
+h2 {
+  display: block;
+  float: none;
+  margin-top: -1%;
+}
+  .galaxy{
+    display: block;
+    width:100%;
+  }
+  .board {
+  }
+  .box {
+
+  }
+  h1 {
+    font-size: 28px;
+  }
+  h5 {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .gameAlert h5{
+    color: white;
+    font-size: 12px;
+    font-family: 'Black Ops One', cursive;
+  }
+
+  .info .name{
+    display: none;
+  }
+
+  .info .gameAlert {
+    font-size: 12px;
+  }
 }
