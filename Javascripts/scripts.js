@@ -1,5 +1,7 @@
 console.log('...loaded');
 
+// Global Game State Key Value Pair Used to Keep Track of Game Options...most of this will eventually live in Player Constructor Functions
+
 var gamestate = {
   active: true,
   playerOne: 'Default',
@@ -12,7 +14,7 @@ var gamestate = {
   playerOnePoints: 0,
   playerTwoPoints: 0,
   winner: null,
-  computerOpponent: true
+  computerOpponent: false
 }
 
 
@@ -36,6 +38,8 @@ Universe.prototype.buildUniverse = function buildUniverse() {
 
 // --- end of the Universe
 
+
+
 // Create the Galaxies
 function Galaxy(options) {
     this.name = name || 'Unnamed';
@@ -53,6 +57,7 @@ Galaxy.prototype.buildGalaxy = function buildGalaxy(){
 };
 
 // --- end of the Galaxy
+
 
 // --- Planet
 
@@ -75,6 +80,7 @@ function Planet(name) {
 
 }
 
+// render a planet BOARD
 
 Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
@@ -82,31 +88,31 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
   //Top Row
   var topRow = $('<div>').addClass('row top-row');
-  var columnOneTop = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 0).attr('col', 0);
+  var columnOneTop = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 0).attr('col', 0).data('clicked', false);
   this.bindBox(columnOneTop, gamestate);
-  var columnTwoTop = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 0).attr('col', 1);
+  var columnTwoTop = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 0).attr('col', 1).data('clicked', false);
   this.bindBox(columnTwoTop, gamestate);
-  var columnThreeTop = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 0).attr('col', 2);
+  var columnThreeTop = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 0).attr('col', 2).data('clicked', false);
   this.bindBox(columnThreeTop, gamestate);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   //Middle Row
   var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0);
+  var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0).data('clicked', false);
   this.bindBox(columnOneMid, gamestate);
-  var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1);
+  var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1).data('clicked', false);
   this.bindBox(columnTwoMid, gamestate);
-  var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2);
+  var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2).data('clicked', false);
   this.bindBox(columnThreeMid, gamestate);
   middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
   //Bottom Row
   var bottomRow = $('<div>').addClass('row bottom-row');
-  var columnOneBot = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 2).attr('col', 0);
+  var columnOneBot = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 2).attr('col', 0).data('clicked', false);
   this.bindBox(columnOneBot, gamestate);
-  var columnTwoBot = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 2).attr('col', 1);
+  var columnTwoBot = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 2).attr('col', 1).data('clicked', false);
   this.bindBox(columnTwoBot, gamestate);
-  var columnThreeBot = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 2).attr('col', 2);
+  var columnThreeBot = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 2).attr('col', 2).data('clicked', false);
   this.bindBox(columnThreeBot, gamestate);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
@@ -116,6 +122,7 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
 }
 
 
+// bind a click to each box
 Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
   var scope = this;
 
@@ -127,18 +134,14 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         parseInt(square.attr('col'))
       ];
 
-      square.data('clicked', true);
 
       if (scope.winner !== null){
         var gameAlert = renderGameAlert('That planet is already claimed.');
       }
-      else if (scope.gameboard[index[0]][index[1]] === 0){
+      else if (square.data('clicked') === false){
+        square.data('clicked', true);
         scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
-        console.log(scope.winner);
-        console.log(scope);
-        console.log('points 1:' + gamestate.playerOnePoints);
-        console.log('points 2:' + gamestate.playerTwoPoints);
       }
       else {
         console.log('You cannot make this move.');
@@ -147,6 +150,7 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
   return boxNode, gamestate;
 };
 
+// map player click to the gameboard array
 Planet.prototype.mapToArray = function mapToArray(row, col, gamestate){
   if (gamestate.playerOneTurn === true) {
     this.gameboard[row][col] = 1;  //this.turn.piece;
@@ -156,7 +160,7 @@ Planet.prototype.mapToArray = function mapToArray(row, col, gamestate){
   console.log(this.gameboard[row]);
 };
 
-
+//color the box depending on whose turn it is
 Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
 
   if (this.winner === null) {
@@ -171,6 +175,7 @@ Planet.prototype.colorBoxOnClick = function colorBoxOnClick(boxNode, gamestate){
   }
 };
 
+// toggles player turn
 Planet.prototype.toggleTurn = function toggleTurn(gamestate){
 
   if (this.winner === null) {
@@ -185,7 +190,7 @@ Planet.prototype.toggleTurn = function toggleTurn(gamestate){
 };
 
 
-
+// colors all boxes if a planet is Won
 Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
 
   var planetClass = ('.' + this.name);
@@ -209,6 +214,7 @@ Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
       return $('body');
 };
 
+//check if the GAME is won
 Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
   var gameOverMessage;
 
@@ -226,6 +232,7 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
   //update with gameover() function
 };
 
+// apends a game over message to the alert box
 Planet.prototype.appendGameOverMessage = function appendGameOverMessage(gamestate) {
   var gameOverMessage = this.generateGameOverMessage(gamestate);
   console.log('game over message: ' + gameOverMessage);
@@ -236,6 +243,7 @@ Planet.prototype.appendGameOverMessage = function appendGameOverMessage(gamestat
   return alertBox;
 }
 
+// what happens during a player turn
 Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
 
   if (gamestate.computerOpponent === false) {
@@ -244,22 +252,19 @@ Planet.prototype.playerTurn = function playerTurn(boxNode, gamestate){
     console.log('player 2 turn');
   } else if (gamestate.computerOpponent === true) {
     this.colorBoxOnClick(boxNode, gamestate);
-    console.log('computer player turn')
-  }
+    this.findUnclickedBox();
+    }
+    //else if contains unusued logic for computer opponent
+    this.checkPlanetWinner(gamestate);
+    this.checkGameWinner(gamestate);
+
+  };
 
 
-  //this.togglePlayerTurn(); //move into TicTacToe Function
+// Computer AI ---  TAKEN OUT
+/*
 
-  this.checkPlanetWinner(gamestate);
-  this.checkGameWinner(gamestate);
-
-
-};
-
-
-// Computer AI ---
-
-function generateRandomIndex() {
+Planet.prototype.generateRandomIndex = function generateRandomIndex() {
   var maxBoxes = $('.box').length;
   var randomNumber = Math.floor(Math.random()*maxBoxes);
 
@@ -267,13 +272,15 @@ function generateRandomIndex() {
 
 }
 
-function generateRandomBox() {
-  var randomIndex = generateRandomIndex();
+Planet.prototype.generateRandomBox = function generateRandomBox() {
+  var randomIndex = this.generateRandomIndex();
   var box = $('.box').eq(randomIndex);
+  console.log(box);
   return box;
 }
 
-function checkIfClicked(boxNode) {
+Planet.prototype.checkIfClicked = function checkIfClicked(boxNode) {
+  console.log(boxNode);
   if (boxNode.data('clicked') === true){
     return true;
   } else {
@@ -281,20 +288,45 @@ function checkIfClicked(boxNode) {
   }
 }
 
-function findUnclickedBox() {
-  var randomBox = generateRandomBox();
-  var clickTest = checkIfClicked(randomBox);
+Planet.prototype.findUnclickedBox = function findUnclickedBox() {
+  var randomBox = this.generateRandomBox();
+  var clickTest = this.checkIfClicked(randomBox);
 
-  if (clickTest === true) {
-    console.log('Box has been clicked');
-  } else if (clickTest === false){
-    randomBox.css({'backgroundColor': gamestate.playerTwoColor});
+  while (clickTest !== false) {
+    randomBox = this.generateRandomBox();
+    clickTest = this.checkIfClicked(randomBox);
   }
+
+    randomBox.css({'backgroundColor': gamestate.playerTwoColor});
+    this.mapComputerMoveToArray(randomBox);
+};
+
+
+Planet.prototype.mapComputerMoveToArray = function mapComputerMoveToArray(randomBox) {
+
+//IS CURRENTLY MAPPING TO WHATEVER BOARD THE PLAYER JUST MADE A PLAY IN
+  var index = [
+    parseInt(randomBox.attr('row')),
+    parseInt(randomBox.attr('col'))
+  ];
+  console.log(index);
+  console.log(this.gameboard);
+    this.gameboard[index[0]][index[1]] = -1;
+    return this.gameboard;
+};
+
+
+function generateRandomGalaxy() {
+  var randomNumber = Math.floor(Math.random()*3);
+  return randomNumber;
 }
 
+function generateRandomPlanet() {
+  var randomNumber = Math.floor(Math.random()*3);
+  return randomNumber;
+}
 
-
-//  --- Computer AI
+*/
 
 
 
@@ -317,6 +349,88 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
     //alter gamestate
     }
 }
+
+Planet.prototype.tieCheck = function tieCheck(){
+
+}
+
+Planet.prototype.rowChecker = function rowChecker(gamestate){
+  var rowSum = 0;
+
+  //update array length to something scaleable
+  for (var r = 0; r < 3; r++) {
+      rowSum = 0;
+      for (var c = 0; c < 3; c++) {
+        rowSum += this.gameboard[r][c];
+
+        if  (rowSum === 3) {
+          this.winner = 'playerOne';
+          gamestate.playerOnePoints += 5;
+          return gamestate;
+        }
+        else if (rowSum === -3) {
+          this.winner = 'playerTwo';
+          gamestate.playerTwoPoints += 5;
+          return gamestate;
+        }
+      }
+
+  }
+};
+
+Planet.prototype.columnChecker = function columnChecker(gamestate){
+  var colSum = 0;
+
+  for (var c = 0; c < 3; c++) {
+    colSum = 0;
+      for (var r = 0; r < 3; r++) {
+        colSum += this.gameboard[r][c];
+        if  (colSum === 3) {
+          this.winner = 'playerOne';
+          gamestate.playerOnePoints += 5;
+          return gamestate;        }
+        else if (colSum === -3) {
+          this.winner = 'playerTwo';
+          gamestate.playerTwoPoints += 5;
+          return gamestate;        }
+      }
+}
+};
+
+Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestate){
+
+  var diagonalSum = 0;
+
+  diagonalSum = this.gameboard[2][0] + this.gameboard[1][1] + this.gameboard[0][2];
+
+  if  (diagonalSum === 3) {
+    this.winner = 'playerOne';
+    gamestate.playerOnePoints += 5;
+    return gamestate;
+  }
+  else if (diagonalSum === -3) {
+    this.winner = 'playerTwo';
+    gamestate.playerTwoPoints += 5;
+    return gamestate;
+  }
+
+};
+
+Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
+
+  var diagonalSum = 0;
+    for (var i = 0; i < 3; i++) {
+      diagonalSum += this.gameboard[i][i];
+      if  (diagonalSum === 3) {
+        this.winner = 'playerOne';
+        gamestate.playerOnePoints += 5;
+        return gamestate;      }
+      else if (diagonalSum === -3) {
+        this.winner = 'playerTwo';
+        gamestate.playerTwoPoints += 5;
+        return gamestate;      }
+}
+};
 
 Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   var winMessage;
@@ -461,95 +575,11 @@ Planet.prototype.alertGameWin = function alertGameWin(gamestate){
   return alertBox;
 };
 
-Planet.prototype.tieCheck = function tieCheck(){
-
-}
-
-Planet.prototype.rowChecker = function rowChecker(gamestate){
-  var rowSum = 0;
-
-  //update array length to something scaleable
-  for (var r = 0; r < 3; r++) {
-      rowSum = 0;
-      for (var c = 0; c < 3; c++) {
-        rowSum += this.gameboard[r][c];
-
-        if  (rowSum === 3) {
-          this.winner = 'playerOne';
-          gamestate.playerOnePoints += 5;
-          return gamestate;
-        }
-        else if (rowSum === -3) {
-          this.winner = 'playerTwo';
-          gamestate.playerTwoPoints += 5;
-          return gamestate;
-        }
-      }
-
-  }
-};
-
-Planet.prototype.columnChecker = function columnChecker(gamestate){
-  var colSum = 0;
-
-  for (var c = 0; c < 3; c++) {
-    colSum = 0;
-      for (var r = 0; r < 3; r++) {
-        colSum += this.gameboard[r][c];
-        if  (colSum === 3) {
-          this.winner = 'playerOne';
-          gamestate.playerOnePoints += 5;
-          return gamestate;        }
-        else if (colSum === -3) {
-          this.winner = 'playerTwo';
-          gamestate.playerTwoPoints += 5;
-          return gamestate;        }
-      }
-}
-};
-
-Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestate){
-
-  var diagonalSum = 0;
-
-  diagonalSum = this.gameboard[2][0] + this.gameboard[1][1] + this.gameboard[0][2];
-
-  if  (diagonalSum === 3) {
-    this.winner = 'playerOne';
-    gamestate.playerOnePoints += 5;
-    return gamestate;
-  }
-  else if (diagonalSum === -3) {
-    this.winner = 'playerTwo';
-    gamestate.playerTwoPoints += 5;
-    return gamestate;
-  }
-
-};
-
-Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
-
-  var diagonalSum = 0;
-    for (var i = 0; i < 3; i++) {
-      diagonalSum += this.gameboard[i][i];
-      if  (diagonalSum === 3) {
-        this.winner = 'playerOne';
-        gamestate.playerOnePoints += 5;
-        return gamestate;      }
-      else if (diagonalSum === -3) {
-        this.winner = 'playerTwo';
-        gamestate.playerTwoPoints += 5;
-        return gamestate;      }
-}
-};
-
-// --- Win Logic End
-
-
 // --- end of the Planet
 
 
-// --- Player ---
+
+// --- Player -- CURRENTLY UNUSED
 
 function Player(name, piece, color){
   this.name = name || 'Unnamed Player';
@@ -560,21 +590,13 @@ function Player(name, piece, color){
 }
 
 
-
-
-
 //  --- Tic Tac Toe Game ---
 
 function TicTacToe(universe){
   this.active = true;
   this.universe = universe;
-  //this.playerOne = universe.playerOne;
-  //this.playerTwo = universe.playerTwo;
-  //this.turn = this.playerOne;
 
   this.winner = null;
-
-
 }
 
 
@@ -583,9 +605,6 @@ function TicTacToe(universe){
 
   TicTacToe.prototype.startGame = function startGame(){
     this.renderStartMenu(gamestate);
-    //this.universe.buildUniverse();
-    //this.renderNameForm();
-    //When I start the game, a form will appear at the bottom of the screen
   }
 
 
@@ -593,9 +612,7 @@ function TicTacToe(universe){
 
 
 
-// Start Menu Start ---
-
-
+// Start Menu
 TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
   var container = $('<div>').attr('id', "start-menu-container");
 
@@ -662,10 +679,10 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
         input.attr('placeholder', 'enter name')
         input.attr('id', 'name-entry');
       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
-      var playerOption = this.renderPlayerOption()
-      var computerOption = this.renderComputerOption();
+      //var playerOption = this.renderPlayerOption()
+      //var computerOption = this.renderComputerOption();
 
-      form.append(input, submitButton, playerOption, computerOption);
+      form.append(input, submitButton);
       this.bindNameForm(form, gamestate);
       return form;
     }
@@ -678,10 +695,10 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           var nameField = $(this).find('input[name="playerName[name]"]');
           var nameText = nameField.val();
           console.log(nameText);
-          var opponentField = $('input:checked').val();
+          //var opponentField = $('input:checked').val();
 
 
-          scope.applyOpponentToGameState(opponentField, gamestate);
+          //scope.applyOpponentToGameState(opponentField, gamestate);
           scope.appendGameName();
           //scope.appendName(nameText);
           scope.applyNameToGameLogic(nameText);
@@ -693,6 +710,9 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
           return scope;
         });
     };
+
+
+/* Choose opponent Radio options
 
     TicTacToe.prototype.applyOpponentToGameState = function applyOpponentToGameState(opponent, gamestate){
       if (opponent === 'player'){
@@ -726,6 +746,7 @@ TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
 
     };
 
+*/
 
     TicTacToe.prototype.appendGameName = function appendGameName(){
       var gameName = $('<h1>').text('Space Tic Tac Toe');
@@ -761,7 +782,7 @@ function renderMenuBar(gamestate) {
   menuBar.attr('id', 'gamestate-bar');
   var playerOneInfo = this.renderPlayerOneInfo(gamestate);
   var playerTwoInfo = this.renderPlayerTwoInfo(gamestate);
-  var gameMessage = this.renderGameAlert();
+  var gameMessage = this.renderGameAlert('First Player to break 67 points wins.');
   menuBar.append(playerOneInfo, gameMessage, playerTwoInfo);
 
   return $('body').append(menuBar);
@@ -772,7 +793,6 @@ function removeMenuBar() {
   menuBar.remove();
 }
 
-//Have a box below the game
 
   //Player One Info
 
@@ -863,46 +883,9 @@ function removeGameAlert(){
   return $('body');
 }
 
-  // --- MENU BAR End
-
-//  Game State Menu:
 
 
-
-
-//TEST
-
-
-//   --- --- --- Menu --- --- ---
-
-
-// Start Menu
-  //Funcion: signIn
-    //radio button for piece/icon
-  //Function: logout
-
-
-//Game Over Menu
-
-  //Restart - Enter Best Of
-
-
-
-
-
-//                    <---   Testing & Launch   --->
-
-
-//   -------  Testing  ---------
-
-
-
-var testPlayer1 = new Player('Steve', 1, 'blue');
-var testPlayer2 = new Player('Kathew', -1, 'red');
-
-console.log(testPlayer1);
-console.log(testPlayer2);
-
+//  --- Game Setup and Initilization
 
 var galaxyOne = new Galaxy({name: 'Steve', planets: [
   new Planet('Tatooine'),
@@ -947,7 +930,6 @@ var universe = new Universe({galaxies: [galaxyOne, galaxyTwo, galaxyThree]});
 
 
 var game = new TicTacToe(universe);
-
 
 
 
