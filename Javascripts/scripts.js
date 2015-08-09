@@ -2,7 +2,7 @@ console.log('...loaded');
 
 var gamestate = {
   active: true,
-  playerOne: 'Steve',
+  playerOne: 'Default',
   playerTwo: 'Emperor Zorgg',
   playerOneColor: 'red',
   playerTwoColor: 'blue',
@@ -133,8 +133,6 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
 
       if (scope.winner !== null){
         var gameAlert = renderGameAlert('That planet is already claimed.');
-        //removeMenuBar();
-        //renderMenuBar(gamestate, gameAlert);
       }
       else if (scope.gameboard[index[0]][index[1]] === 0){
         scope.mapToArray(index[0],index[1], gamestate);
@@ -204,7 +202,7 @@ Planet.prototype.checkGameWinner = function checkGameWinner(gamestate){
   if (gamestate.playerOnePoints > 67){
     gamestate.winner = 'playerOne';
     gameOverMessage = this.appendGameOverMessage(gamestate);
-    this.gameOver(gamestate);
+    gameOver(gamestate);
     return gameOverMessage;
     console.log(game)
     console.log('Player One Won: ' + gamestate.playerOnePoints);
@@ -290,16 +288,98 @@ Planet.prototype.generateGameOverMessage = function generateGameOverMessage(game
   return gameOverMessage;
 };
 
-Planet.prototype.gameOver = function gameOver(gamestate){
+function gameOver(gamestate){
   var universe = $('#universe');
   var headerTag = $('h1');
   var menuBar = $('#gamestate-bar');
   headerTag.remove();
   universe.remove();
   menuBar.remove();
+  renderGameOverContainer(gamestate)
   return $('body');
-
 };
+
+
+
+// ---  Game Over Rendering
+
+
+function renderGameOverContainer(gamestate) {
+  var container = $('<div>').attr('id', "game-over-menu-container");
+
+  container.append(renderGameOverMenu(gamestate));
+
+  return $('body').append(container);
+};
+
+function renderGameOverMenu(gamestate) {
+
+    var menu = $('<div>').addClass('game-over-menu');
+    var gameOverBox = renderGameOverBox(gamestate);
+    var button = renderRestartButton();
+    menu.append(gameOverBox, button);
+
+    return menu;
+  };
+
+function renderGameOverBox(gamestate) {
+
+    var gameOverBox = $('<div>').addClass('game-over-box');
+    var gameOverMessage;
+
+    if (gamestate.winner === 'playerOne'){
+      gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br> Commander ' + gamestate.playerOne + ' wins!');
+      gameOverBox.append(gameOverMessage);
+    }
+    else if (gamestate.winner === 'playerTwo') {
+      gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br>' + gamestate.playerOne);
+      gameOverBox.append(gameOverMessage);
+    }
+    return gameOverBox;
+  };
+
+
+function renderRestartButton() {
+  var button = $('<button>');
+    button.attr('name', 'restartButton');
+    button.addClass('restart')
+    button.text('Restart');
+    bindRestartButton(button);
+    return button;
+}
+
+function bindRestartButton(button){
+  button.on('click', function(e) {
+    console.log('click');
+    var restart = $(e.target);
+      removeRestartMenu();
+      gamestate = {
+        active: true,
+        playerOne: 'Default',
+        playerTwo: 'Emperor Zorgg',
+        playerOneColor: 'red',
+        playerTwoColor: 'blue',
+        playerOneMarker: 1,
+        playerTwoMarker: -1,
+        playerOneTurn: true,
+        playerOnePoints: 0,
+        playerTwoPoints: 0,
+        winner: null
+      };
+
+      init();
+
+  });
+}
+
+function removeRestartMenu() {
+  var restartMenu = $('#game-over-menu-container');
+
+  restartMenu.remove();
+}
+
+// ---- End Working
+
 
 Planet.prototype.alertWin = function alertWin(gamestate){
   var winMessage = this.generateWinMessage(gamestate);
