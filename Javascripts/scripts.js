@@ -36,8 +36,6 @@ Universe.prototype.buildUniverse = function buildUniverse() {
   return $('body').append(universe);
 };
 
-// --- end of the Universe
-
 
 
 // Create the Galaxies
@@ -56,7 +54,6 @@ Galaxy.prototype.buildGalaxy = function buildGalaxy(){
   return container;
 };
 
-// --- end of the Galaxy
 
 
 // --- Planet
@@ -80,13 +77,24 @@ function Planet(name) {
 
 }
 
-// render a planet BOARD
+// --- GAME BOARD ---
+
 
 Planet.prototype.renderBoard = function renderBoard(gamestate) {
 
   var board = $('<div>').addClass('board');
 
-  //Top Row
+  var topRow = this.renderTopRow(gamestate);
+  var middleRow = this.renderMiddleRow(gamestate);
+  var bottomRow = this.renderBottomRow(gamestate);
+
+  board.append(topRow, middleRow, bottomRow);
+
+  return board;
+}
+
+
+Planet.prototype.renderTopRow = function renderTopRow(gamestate) {
   var topRow = $('<div>').addClass('row top-row');
   var columnOneTop = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 0).attr('col', 0).data('clicked', false);
   this.bindBox(columnOneTop, gamestate);
@@ -96,17 +104,23 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
   this.bindBox(columnThreeTop, gamestate);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
-  //Middle Row
-  var middleRow = $('<div>').addClass('row middle-row');
-  var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0).data('clicked', false);
-  this.bindBox(columnOneMid, gamestate);
-  var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1).data('clicked', false);
-  this.bindBox(columnTwoMid, gamestate);
-  var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2).data('clicked', false);
-  this.bindBox(columnThreeMid, gamestate);
-  middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
+  return topRow;
+}
 
-  //Bottom Row
+Planet.prototype.renderMiddleRow = function renderMiddleRow(gamestate){
+var middleRow = $('<div>').addClass('row middle-row');
+var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0).data('clicked', false);
+this.bindBox(columnOneMid, gamestate);
+var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1).data('clicked', false);
+this.bindBox(columnTwoMid, gamestate);
+var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2).data('clicked', false);
+this.bindBox(columnThreeMid, gamestate);
+middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
+
+return middleRow;
+}
+
+Planet.prototype.renderBottomRow = function(gamestate) {
   var bottomRow = $('<div>').addClass('row bottom-row');
   var columnOneBot = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 2).attr('col', 0).data('clicked', false);
   this.bindBox(columnOneBot, gamestate);
@@ -116,11 +130,8 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
   this.bindBox(columnThreeBot, gamestate);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
-  board.append(topRow, middleRow, bottomRow);
-
-  return board;
+  return bottomRow;
 }
-
 
 // bind a click to each box
 Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
@@ -134,6 +145,7 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         parseInt(square.attr('col'))
       ];
 
+      //check to see if there is a winner
 
       if (scope.winner !== null){
         var gameAlert = renderGameAlert('That planet is already claimed.');
@@ -346,7 +358,6 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
     removeMenuBar();
     renderMenuBar(gamestate);
     this.alertWin(gamestate);
-    //alter gamestate
     }
 }
 
@@ -444,6 +455,16 @@ Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   }
 
   return winMessage;
+};
+
+
+Planet.prototype.alertWin = function alertWin(gamestate){
+  var winMessage = this.generateWinMessage(gamestate);
+  var messageTag =  $('<h5>');
+  messageTag.html(winMessage);
+  var alertBox = $('.gameAlert');
+  alertBox.html(messageTag);
+  return alertBox;
 };
 
 
@@ -554,26 +575,6 @@ function removeRestartMenu() {
   restartMenu.remove();
 }
 
-
-Planet.prototype.alertWin = function alertWin(gamestate){
-  var winMessage = this.generateWinMessage(gamestate);
-  var messageTag =  $('<h5>');
-  messageTag.html(winMessage);
-  var alertBox = $('.gameAlert');
-  alertBox.html(messageTag);
-  return alertBox;
-};
-
-Planet.prototype.alertGameWin = function alertGameWin(gamestate){
-  var winMessage = this.generateWinMessage(gamestate);
-  var messageTag =  $('<h5>');
-  messageTag.html(winMessage);
-  var alertBox = $('.gameAlert');
-  alertBox.html(messageTag);
-  console.log('wm ' + winMessage);
-  //appendGameMessage(winMessage);
-  return alertBox;
-};
 
 // --- end of the Planet
 
