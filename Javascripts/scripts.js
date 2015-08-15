@@ -2,6 +2,32 @@ console.log('...loaded');
 
 // Global Game State Key Value Pair Used to Keep Track of Game Options...most of this will eventually live in Player Constructor Functions
 
+
+
+// --- Player -- CURRENTLY UNUSED
+
+function Player(name, piece, color, type){
+  this.name = name || 'Unnamed Player';
+  this.piece = piece;
+  this.color = color;
+  this.type = type;
+  this.points = 0;
+  this.winner = false;
+}
+
+var test1 = new Player('Steve', 1, 'yellow', 'player');
+var test2 = new Player('Zorrg', -1, 'red', 'computer');
+
+var players  = [test1, test2];
+
+function Gamestate(players) {
+  this.players = players;
+  this.turn = 0;
+  this.winner = null;
+};
+
+//create new gamestate and pass through each function
+
 var gamestate = {
   active: true,
   playerOne: 'Default',
@@ -22,18 +48,16 @@ var gamestate = {
 
 function Universe(options) {
   this.galaxies = options.galaxies || [];
-  console.log(this.galaxies.length);
 }
 
 Universe.prototype.buildUniverse = function buildUniverse() {
-  var universe = $('<div>').attr('id', 'universe');
+  var thisuniverse = $('<div>').attr('id', 'universe');
   var galaxy;
   for (var i = 0; i < this.galaxies.length; i++) {
       galaxy = this.galaxies[i];
-      console.log(galaxy);
-      universe.append(galaxy.buildGalaxy());
+      thisuniverse.append(galaxy.buildGalaxy(this));
   }
-  return $('body').append(universe);
+  return $('body').append(thisuniverse);
 };
 
 
@@ -44,12 +68,13 @@ function Galaxy(options) {
     this.planets = options.planets || [];
 };
 
-Galaxy.prototype.buildGalaxy = function buildGalaxy(){
+Galaxy.prototype.buildGalaxy = function buildGalaxy(universe){
   var container = $('<div>').addClass('galaxy');
   var planet;
+
   for (var i = 0; i < this.planets.length; i++) {
       planet = this.planets[i];
-      container.append(planet.renderBoard(gamestate));
+      container.append(planet.renderBoard(universe));
   }
   return container;
 };
@@ -80,13 +105,12 @@ function Planet(name) {
 // --- GAME BOARD ---
 
 
-Planet.prototype.renderBoard = function renderBoard(gamestate) {
+Planet.prototype.renderBoard = function renderBoard(universe) {
 
   var board = $('<div>').addClass('board');
-
-  var topRow = this.renderTopRow(gamestate);
-  var middleRow = this.renderMiddleRow(gamestate);
-  var bottomRow = this.renderBottomRow(gamestate);
+  var topRow = this.renderTopRow(universe);
+  var middleRow = this.renderMiddleRow(universe);
+  var bottomRow = this.renderBottomRow(universe);
 
   board.append(topRow, middleRow, bottomRow);
 
@@ -94,47 +118,47 @@ Planet.prototype.renderBoard = function renderBoard(gamestate) {
 }
 
 
-Planet.prototype.renderTopRow = function renderTopRow(gamestate) {
+Planet.prototype.renderTopRow = function renderTopRow(universe) {
   var topRow = $('<div>').addClass('row top-row');
   var columnOneTop = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 0).attr('col', 0).data('clicked', false);
-  this.bindBox(columnOneTop, gamestate);
+  this.bindBox(columnOneTop, universe);
   var columnTwoTop = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 0).attr('col', 1).data('clicked', false);
-  this.bindBox(columnTwoTop, gamestate);
+  this.bindBox(columnTwoTop, universe);
   var columnThreeTop = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 0).attr('col', 2).data('clicked', false);
-  this.bindBox(columnThreeTop, gamestate);
+  this.bindBox(columnThreeTop, universe);
   topRow.append(columnOneTop, columnTwoTop, columnThreeTop);
 
   return topRow;
 }
 
-Planet.prototype.renderMiddleRow = function renderMiddleRow(gamestate){
+Planet.prototype.renderMiddleRow = function renderMiddleRow(universe){
 var middleRow = $('<div>').addClass('row middle-row');
 var columnOneMid = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 1).attr('col', 0).data('clicked', false);
-this.bindBox(columnOneMid, gamestate);
+this.bindBox(columnOneMid, universe);
 var columnTwoMid = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 1).attr('col', 1).data('clicked', false);
-this.bindBox(columnTwoMid, gamestate);
+this.bindBox(columnTwoMid, universe);
 var columnThreeMid = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 1).attr('col', 2).data('clicked', false);
-this.bindBox(columnThreeMid, gamestate);
+this.bindBox(columnThreeMid, universe);
 middleRow.append(columnOneMid, columnTwoMid, columnThreeMid);
 
 return middleRow;
 }
 
-Planet.prototype.renderBottomRow = function(gamestate) {
+Planet.prototype.renderBottomRow = function(universe) {
   var bottomRow = $('<div>').addClass('row bottom-row');
   var columnOneBot = $('<div>').addClass('box column-one').addClass(this.name).attr('row', 2).attr('col', 0).data('clicked', false);
-  this.bindBox(columnOneBot, gamestate);
+  this.bindBox(columnOneBot, universe);
   var columnTwoBot = $('<div>').addClass('box column-two').addClass(this.name).attr('row', 2).attr('col', 1).data('clicked', false);
-  this.bindBox(columnTwoBot, gamestate);
+  this.bindBox(columnTwoBot, universe);
   var columnThreeBot = $('<div>').addClass('box column-three').addClass(this.name).attr('row', 2).attr('col', 2).data('clicked', false);
-  this.bindBox(columnThreeBot, gamestate);
+  this.bindBox(columnThreeBot, universe);
   bottomRow.append(columnOneBot, columnTwoBot, columnThreeBot);
 
   return bottomRow;
 }
 
 // bind a click to each box
-Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
+Planet.prototype.bindBox = function bindBox(boxNode, universe) {
   var scope = this;
 
   boxNode.on('click', function(e){
@@ -152,14 +176,14 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
       }
       else if (square.data('clicked') === false){
         square.data('clicked', true);
-        scope.mapToArray(index[0],index[1], gamestate);
-        scope.playerTurn(boxNode, gamestate);
+        //scope.mapToArray(index[0],index[1], universe);
+        //scope.playerTurn(boxNode, universe);
       }
       else {
         console.log('You cannot make this move.');
       }
   });
-  return boxNode, gamestate;
+  return boxNode, universe;
 };
 
 // map player click to the gameboard array
@@ -580,24 +604,12 @@ function removeRestartMenu() {
 
 
 
-// --- Player -- CURRENTLY UNUSED
-
-function Player(name, piece, color){
-  this.name = name || 'Unnamed Player';
-  this.piece = piece;
-  this.color = color;
-  //this.winner = false;
-  this.canClick = true;
-}
-
 
 //  --- Tic Tac Toe Game ---
 
-function TicTacToe(universe){
-  this.active = true;
-  this.universe = universe;
+function TicTacToe(options){
+  this.universe = options.universe;
 
-  this.winner = null;
 }
 
 
@@ -930,7 +942,7 @@ var universe = new Universe({galaxies: [galaxyOne, galaxyTwo, galaxyThree]});
 
 
 
-var game = new TicTacToe(universe);
+var game = new TicTacToe({players: [test1, test2], universe: universe});
 
 
 
@@ -948,3 +960,13 @@ function init(){
   game.startGame();
 
 }
+
+
+//  What is Next
+//include players in universe
+  // update map_to_array and bind to click using universe.players and univese.player[0].color
+
+//  Use Player Constructor to make players
+   // .toggleClass player-one (this.turn)
+//  pass in the universe instead of the gamestate
+//  add computer win logic
