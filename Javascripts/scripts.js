@@ -191,6 +191,9 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
         computerTurn(gamestate);
+        // computerTurn(gamestate);
+        // computerTurn(gamestate);
+        // computerTurn(gamestate);
       }
       else {
         console.log('You cannot make this move.');
@@ -253,7 +256,7 @@ Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
         planetBoxes.eq(i).css({
           'backgroundColor': gamestate.players[0].color,
           'opacity': '0.6',
-        });
+          });
         planetBoxes.eq(i).data('clicked', true);
       }
     } else if (this.winner = gamestate.players[1].name){
@@ -403,12 +406,12 @@ Planet.prototype.rowChecker = function rowChecker(gamestate){
         rowSum += this.gameboard[r][c];
 
         if  (rowSum === 3) {
-          this.winner = 'playerOne';
+          this.winner = gamestate.players[0].name;
           gamestate.players[0].points += 5;
           return gamestate;
         }
         else if (rowSum === -3) {
-          this.winner = 'playerTwo';
+          this.winner = gamestate.players[1].name;
           gamestate.players[1].points += 5;
           return gamestate;
         }
@@ -425,11 +428,11 @@ Planet.prototype.columnChecker = function columnChecker(gamestate){
       for (var r = 0; r < 3; r++) {
         colSum += this.gameboard[r][c];
         if  (colSum === 3) {
-          this.winner = 'playerOne';
+          this.winner = gamestate.players[0].name;
           gamestate.players[0].points += 5;
           return gamestate;        }
         else if (colSum === -3) {
-          this.winner = 'playerTwo';
+          this.winner = gamestate.players[1].name;
           gamestate.players[1].points += 5;
           return gamestate;        }
       }
@@ -443,12 +446,12 @@ Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestat
   diagonalSum = this.gameboard[2][0] + this.gameboard[1][1] + this.gameboard[0][2];
 
   if  (diagonalSum === 3) {
-    this.winner = 'playerOne';
+    this.winner = gamestate.players[0].name;
     gamestate.players[0].points += 5;
     return gamestate;
   }
   else if (diagonalSum === -3) {
-    this.winner = 'playerTwo';
+    this.winner = gamestate.players[1].name;
     gamestate.players[1].points += 5;
     return gamestate;
   }
@@ -461,11 +464,11 @@ Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
     for (var i = 0; i < 3; i++) {
       diagonalSum += this.gameboard[i][i];
       if  (diagonalSum === 3) {
-        this.winner = 'playerOne';
+        this.winner = gamestate.players[0].name;
         gamestate.players[0].points += 5;
         return gamestate;      }
       else if (diagonalSum === -3) {
-        this.winner = 'playerTwo';
+        this.winner = gamestate.players[1].name;
         gamestate.players[1].points += 5;
         return gamestate;      }
 }
@@ -477,9 +480,9 @@ Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   var playerTwoName = gamestate.players[1].name;
   console.log(gamestate);
   if (this.winner === gamestate.players[0].name){
-    winMessage = this.name + ' has been claimed by <br> Commander ' + playerOneName;
+    winMessage = this.name + ' has been claimed by <br> Commander ' + gamestate.players[0].name;
   } else if (this.winner === gamestate.players[1].name) {
-    winMessage = this.name + ' has been claimed by <br>' + playerTwoName;
+    winMessage = this.name + ' has been claimed by <br>' + gamestate.players[1].name;
   }
 
   return winMessage;
@@ -504,9 +507,9 @@ Planet.prototype.generateGameOverMessage = function generateGameOverMessage(game
   var playerTwoName = gamestate.players[1].name;
 
   if (gamestate.winner === gamestate.players[0].name){
-    gameOverMessage = 'Commander' + playerOneName + ' wins';
+    gameOverMessage = 'Commander' + gamestate.players[0].name + ' wins';
   } else if (gamestate.winner === gamestate.players[1].name) {
-    gameOverMessage = playerOneName +' wins';
+    gameOverMessage = gamestate.players[1].name +' wins';
   }
 
   return gameOverMessage;
@@ -577,6 +580,9 @@ function bindRestartButton(button){
     console.log('click');
     var restart = $(e.target);
       removeRestartMenu();
+
+      //redeclare gamestate
+
       gamestate = {
         active: true,
         playerOne: 'Default',
@@ -950,26 +956,42 @@ var game = new TicTacToe({players: [test1, test2], universe: universe});
 
 
 
+
+
 function computerTurn(gamestate) {
-var randomGalaxy = Math.floor(Math.random()*3);
-var randomPlanet = Math.floor(Math.random()*9);
-var randomRow = Math.floor(Math.random()*3);
-var randomCol = Math.floor(Math.random()*3);
+  var randomRow = Math.floor(Math.random()*3);
+  var randomCol = Math.floor(Math.random()*3);
+  var randomGalaxy = Math.floor(Math.random()*3);
+  var randomPlanet = Math.floor(Math.random()*9);
+  var planetName = universe.galaxies[randomGalaxy].planets[randomPlanet].name
+  var planetClass = ('.' + planetName);
+  var planetRow = ('.row' + randomRow);
+  var planetCol = ('.col' + randomCol);
 
+  var selectorClass = (planetClass + planetRow + planetCol);
 
-var planetName = universe.galaxies[randomGalaxy].planets[randomPlanet].name
+  while ( $(selectorClass).data('clicked') === true ) {
+    console.log ('while loop: clicked already!');
+    randomRow = Math.floor(Math.random()*3);
+    randomCol = Math.floor(Math.random()*3);
+    randomGalaxy = Math.floor(Math.random()*3);
+    randomPlanet = Math.floor(Math.random()*9);
+    planetName = universe.galaxies[randomGalaxy].planets[randomPlanet].name
 
-var planetClass = ('.' + planetName);
-var planetRow = ('.row' + randomRow);
-var planetCol = ('.col' + randomCol);
+    planetClass = ('.' + planetName);
+    planetRow = ('.row' + randomRow);
+    planetCol = ('.col' + randomCol);
 
-var selectorClass = (planetClass + planetRow + planetCol);
-
+    selectorClass = (planetClass + planetRow + planetCol);
+  }
 
 universe.galaxies[randomGalaxy].planets[randomPlanet]
 .gameboard[randomRow][randomCol] = -1
 
 $(selectorClass).css({backgroundColor: gamestate.players[1].color});
+
+universe.galaxies[randomGalaxy].planets[randomPlanet].checkPlanetWinner(gamestate);
+universe.galaxies[randomGalaxy].planets[randomPlanet].checkGameWinner(gamestate);
 
 return gamestate;
 }
