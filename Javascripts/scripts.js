@@ -12,6 +12,7 @@ function Player(name, piece, color, type){
   this.color = color;
   this.type = type;
   this.points = 0;
+  this.planetsWon = [];
   this.winner = false;
 }
 
@@ -191,9 +192,10 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
         computerTurn(gamestate);
-        // computerTurn(gamestate);
-        // computerTurn(gamestate);
-        // computerTurn(gamestate);
+        computerTurn(gamestate);
+        computerTurn(gamestate);
+        computerTurn(gamestate);
+        computerTurn(gamestate);
       }
       else {
         console.log('You cannot make this move.');
@@ -995,6 +997,21 @@ universe.galaxies[randomGalaxy].planets[randomPlanet].checkGameWinner(gamestate)
 
 return gamestate;
 }
+
+function checkWinner(gamestate) {
+  for (var i = 0; i < universe.galaxies.length; i++) {
+    var planets = universe.galaxies[i].planets.map(function(planet){
+      if ((planet.winner === gamestate.players[0].name) && (gamestate.players[0].planetsWon.indexOf(planet.name) === -1)) {
+        gamestate.players[0].planetsWon.push(planet.name);
+      } else if ((planet.winner === gamestate.players[1].name) && (gamestate.players[1].planetsWon.indexOf(planet.name) === -1)) {
+        gamestate.players[1].planetsWon.push(planet.name);
+        }
+      });
+    }
+}
+
+
+
 // update with gamestate.player[gamestate.turn].piece
 // universe.galaxies[0].planets[0].gameboard[0]
 
