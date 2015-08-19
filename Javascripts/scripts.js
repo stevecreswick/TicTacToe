@@ -12,11 +12,12 @@ function Player(name, piece, color, type){
   this.color = color;
   this.type = type;
   this.planetsWon = [];
+  this.galaxiesWon =[];
   this.points = this.planetsWon.length;
   this.winner = false;
 }
 
-var test1 = new Player('Steve', 1, 'yellow', 'player');
+var test1 = new Player('Steve', 1, 'blue', 'player');
 var test2 = new Player('Zorrg', -1, 'red', 'computer');
 
 var players  = [test1, test2];
@@ -54,7 +55,7 @@ function Universe(options) {
 }
 
 Universe.prototype.buildUniverse = function buildUniverse() {
-  var thisuniverse = $('<div>').attr('id', 'universe');
+  var thisuniverse = $('<div>').attr('id', 'universe').addClass("animated fadeIn");
   var galaxy;
   for (var i = 0; i < this.galaxies.length; i++) {
       galaxy = this.galaxies[i];
@@ -67,8 +68,9 @@ Universe.prototype.buildUniverse = function buildUniverse() {
 
 // Create the Galaxies
 function Galaxy(options) {
-    this.name = name || 'Unnamed';
+    this.name = options.name || 'Unnamed';
     this.planets = options.planets || [];
+    this.winner = null;
 };
 
 Galaxy.prototype.buildGalaxy = function buildGalaxy(gamestate){
@@ -196,6 +198,8 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         computerTurn(gamestate);
         computerTurn(gamestate);
         computerTurn(gamestate);
+        computerTurn(gamestate);
+        computerTurn(gamestate);
         //checkWinner(gamestate);
       }
       else {
@@ -247,28 +251,20 @@ Planet.prototype.toggleTurn = function toggleTurn(gamestate){
 
 
 // colors all boxes if a planet is Won
-Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate){
+Planet.prototype.colorAllBoxes = function colorAllBoxes(gamestate, winner){
 
 
 //NEED to change the planet this.winner to reflect the change to gamestate
   var planetClass = ('.' + this.name);
   var planetBoxes = $(planetClass);
 
-    if (this.winner === gamestate.players[0].name){
       for (var i = 0; i < planetBoxes.length; i++) {
         planetBoxes.eq(i).css({
-          'backgroundColor': gamestate.players[0].color,
+          'backgroundColor': winner.color,
           'opacity': '0.6',
           });
         planetBoxes.eq(i).data('clicked', true);
       }
-    } else if (this.winner = gamestate.players[1].name){
-      for (var x = 0; x < planetBoxes.length; x++) {
-        planetBoxes.eq(x).css({'backgroundColor': gamestate.players[1].color});
-        planetBoxes.eq(i).data('clicked', true);
-      }
-    }
-
       return $('body');
 };
 
@@ -287,21 +283,44 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
     this.columnChecker(gamestate);
     this.diagonalBottomChecker(gamestate);
     this.diagonalTopChecker(gamestate);
-    //this.tieCheck();
-
+    this.tieCheck(gamestate);
     if (this.winner !== null) {
-    this.colorAllBoxes(gamestate);
-    checkWinner(gamestate);
-    gamestate.players[0].points = gamestate.players[0].planetsWon.length;
-    gamestate.players[1].points = gamestate.players[1].planetsWon.length;
-    removeMenuBar();
-    renderMenuBar(gamestate);
-    this.alertWin(gamestate);
+      if (this.winner === gamestate.players[0].name) {
+      this.colorAllBoxes(gamestate, gamestate.players[0]);
+      } else if (this.winner === gamestate.players[1].name) {
+      this.colorAllBoxes(gamestate, gamestate.players[1]);
+      }
+      checkWinner(gamestate);
+      checkGalaxies(game, gamestate, universe);
+      gamestate.players[0].points = gamestate.players[0].planetsWon.length;
+      gamestate.players[1].points = gamestate.players[1].planetsWon.length;
+      removeMenuBar();
+      renderMenuBar(gamestate);
+      this.alertWin(gamestate);
     }
 }
 
 Planet.prototype.tieCheck = function tieCheck(){
+  var planetClass = ('.' + this.name);
+  var planetBoxes = $(planetClass);
+  var testArray = [];
 
+if (this.winner === null) {
+      for (var i = 0; i < planetBoxes.length; i++) {
+        testArray.push(planetBoxes.eq(i).data('clicked'));
+      }
+
+      if (testArray.indexOf(false) === - 1){
+        this.winner = 'tie';
+        for (var i = 0; i < planetBoxes.length; i++) {
+          planetBoxes.eq(i).css({
+            'backgroundColor': 'grey',
+            'opacity': '0.6',
+            });
+        }
+        return $('body');
+      }
+    }
 }
 
 Planet.prototype.rowChecker = function rowChecker(gamestate){
@@ -513,7 +532,7 @@ function removeRestartMenu() {
 
 function TicTacToe(options){
   this.universe = options.universe;
-
+  this.winner = null;
 }
 
 
@@ -521,116 +540,123 @@ function TicTacToe(options){
 
 
   TicTacToe.prototype.startGame = function startGame(){
-    this.renderStartMenu(gamestate);
+    this.appendGameName();
+    this.universe.buildUniverse();
+    renderMenuBar(gamestate);
+    this.gameBackground();
+
+    //this.renderStartMenu(gamestate);
   }
 
 
+    TicTacToe.prototype.gameBackground = function gameBackground(){
+      $('body').css({'background': 'url(\'http://apod.nasa.gov/apod/image/1004/m66_hst_big.jpg\')'});
+      $('body').css({'backgroundSize': 'cover', 'backgroundRepeat': 'no-repeat'});
+      return $('body');
+     };
+
 //   ---   START GAME FUNCTION
+//
+//
+//
+// // Start Menu
+// TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
+//   var container = $('<div>').attr('id', "start-menu-container");
+//
+//   container.append(this.renderWelcomeMenu(gamestate));
+//   this.startBackground();
+//   this.startGameName();
+//
+//   return $('body').append(container);
+// };
+//
+// // --- Start Menu Parts
+//   TicTacToe.prototype.startBackground = function startBackground(){
+//
+//     $('body').css({'background': 'url(\'http://img2.wikia.nocookie.net/__cb20130118053308/starwars/images/9/9c/DCS_Destruction.png\')'});
+//     return $('body');
+//   };
+//
 
-
-
-// Start Menu
-TicTacToe.prototype.renderStartMenu = function renderStartMenu(gamestate) {
-  var container = $('<div>').attr('id', "start-menu-container");
-
-  container.append(this.renderWelcomeMenu(gamestate));
-  this.startBackground();
-  this.startGameName();
-
-  return $('body').append(container);
-};
-
-// --- Start Menu Parts
-  TicTacToe.prototype.startBackground = function startBackground(){
-
-    $('body').css({'background': 'url(\'http://img2.wikia.nocookie.net/__cb20130118053308/starwars/images/9/9c/DCS_Destruction.png\')'});
-    return $('body');
-  };
-
-  TicTacToe.prototype.gameBackground = function gameBackground(){
-    $('body').css({'background': 'url(\'http://apod.nasa.gov/apod/image/1004/m66_hst_big.jpg\')'});
-    $('body').css({'backgroundSize': 'cover'});
-    return $('body');
-  };
-
-  TicTacToe.prototype.startGameName = function startGameName(){
-    var gameName = $('<h2>').html('Space <br> Tic Tac Toe');
-    return $('body').append(gameName);
-  };
-
-  TicTacToe.prototype.removeStartGameName = function removeStartGameName(){
-    var gameName = $('h2');
-    gameName.remove();
-    return $('body');
-  };
-
-  TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu(gamestate) {
-
-    var menu = $('<div>').addClass('welcome-menu');
-
-    var welcomeBox = this.renderWelcomeBox();
-    menu.append(welcomeBox);
-
-    return menu;
-  };
-
-  TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
-
-    var welcomeBox = $('<div>').addClass('welcome-box');
-    var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. <br><br>You must stay on board and take charge of the navy or we will all perish. <br><br>Stop the invaders before they enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
-    //var playerOptions = this.renderOpponentOptions();
-    var nameForm = this.renderNameForm(gamestate);
-    welcomeBox.append(welcomeMessage, nameForm);
-    return welcomeBox;
-  };
-
-
-  // Name Form Start ---
-
-    TicTacToe.prototype.renderNameForm = function renderNameForm(gamestate) {
-      var form = $('<form>');
-        form.attr('id', 'player-name-entry');
-      var input = $('<input>');
-        input.attr('type', 'text');
-        input.attr('name', 'playerName[name]');
-        input.attr('placeholder', 'enter name')
-        input.attr('id', 'name-entry');
-      var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
-      //var playerOption = this.renderPlayerOption()
-      //var computerOption = this.renderComputerOption();
-
-      form.append(input, submitButton);
-      this.bindNameForm(form, gamestate);
-      return form;
-    }
-
-    TicTacToe.prototype.bindNameForm = function bindNameForm(form, gamestate){
-      var scope = this;
-      console.log(scope);
-        form.on('submit', function(e){
-          e.preventDefault();
-          var nameField = $(this).find('input[name="playerName[name]"]');
-          var nameText = nameField.val();
-          console.log(nameText);
-          //var opponentField = $('input:checked').val();
-
-
-          //scope.applyOpponentToGameState(opponentField, gamestate);
-          scope.appendGameName();
-          //scope.appendName(nameText);
-          scope.applyNameToGameLogic(nameText);
-          scope.universe.buildUniverse();
-          renderMenuBar(gamestate);
-          scope.gameBackground();
-          scope.removeStartMenu();
-          scope.removeStartGameName();
-          return scope;
-        });
-    };
+//
+//   TicTacToe.prototype.startGameName = function startGameName(){
+//     var gameName = $('<h2>').html('Space <br> Tic Tac Toe');
+//     return $('body').append(gameName);
+//   };
+//
+//   TicTacToe.prototype.removeStartGameName = function removeStartGameName(){
+//     var gameName = $('h2');
+//     gameName.remove();
+//     return $('body');
+//   };
+//
+//   TicTacToe.prototype.renderWelcomeMenu = function renderWelcomeMenu(gamestate) {
+//
+//     var menu = $('<div>').addClass('welcome-menu');
+//
+//     var welcomeBox = this.renderWelcomeBox();
+//     menu.append(welcomeBox);
+//
+//     return menu;
+//   };
+//
+//   TicTacToe.prototype.renderWelcomeBox = function renderWelcomeBox() {
+//
+//     var welcomeBox = $('<div>').addClass('welcome-box');
+//     var welcomeMessage = $('<h4>').addClass('welcome-message').html('Incoming Message: <br><br> Officer, your SOS was received. <br><br>The flagship is in critical condition.  You are the sole survivor. <br><br>You must stay on board and take charge of the navy or we will all perish. <br><br>Stop the invaders before they enslave us all. <br><br>The universe thanks you for your sacrifice,<br>Supreme Chancellor Kathew');
+//     //var playerOptions = this.renderOpponentOptions();
+//     var nameForm = this.renderNameForm(gamestate);
+//     welcomeBox.append(welcomeMessage, nameForm);
+//     return welcomeBox;
+//   };
+//
+//
+//   // Name Form Start ---
+//
+//     TicTacToe.prototype.renderNameForm = function renderNameForm(gamestate) {
+//       var form = $('<form>');
+//         form.attr('id', 'player-name-entry');
+//       var input = $('<input>');
+//         input.attr('type', 'text');
+//         input.attr('name', 'playerName[name]');
+//         input.attr('placeholder', 'enter name')
+//         input.attr('id', 'name-entry');
+//       var submitButton = $('<input>').attr('type', 'submit').addClass('enter-name-button').text('Launch Tactical Display');
+//       //var playerOption = this.renderPlayerOption()
+//       //var computerOption = this.renderComputerOption();
+//
+//       form.append(input, submitButton);
+//       this.bindNameForm(form, gamestate);
+//       return form;
+//     }
+//
+//     TicTacToe.prototype.bindNameForm = function bindNameForm(form, gamestate){
+//       var scope = this;
+//       console.log(scope);
+//         form.on('submit', function(e){
+//           e.preventDefault();
+//           var nameField = $(this).find('input[name="playerName[name]"]');
+//           var nameText = nameField.val();
+//           console.log(nameText);
+//           //var opponentField = $('input:checked').val();
+//
+//
+//           //scope.applyOpponentToGameState(opponentField, gamestate);
+//           scope.appendGameName();
+//           //scope.appendName(nameText);
+//           //scope.applyNameToGameLogic(nameText);
+//           scope.universe.buildUniverse();
+//           renderMenuBar(gamestate);
+//           scope.gameBackground();
+//           scope.removeStartMenu();
+//           scope.removeStartGameName();
+//           return scope;
+//         });
+//     };
 
 
     TicTacToe.prototype.appendGameName = function appendGameName(){
-      var gameName = $('<h1>').text('Space Tic Tac Toe');
+      var gameName = $('<h1>').text('Space Tic Tac Toe').addClass('animated fadeInDownBig');
       return $('body').append(gameName);
     };
 
@@ -768,7 +794,7 @@ function removeGameAlert(){
 
 //  --- Game Setup and Initilization
 
-var galaxyOne = new Galaxy({name: 'Steve', planets: [
+var galaxyOne = new Galaxy({name: 'Alpha', planets: [
   new Planet('Tatooine'),
   new Planet('Endor'),
   new Planet('Coruscant'),
@@ -780,7 +806,7 @@ var galaxyOne = new Galaxy({name: 'Steve', planets: [
   new Planet('Corellia')
 ]});
 
-var galaxyTwo = new Galaxy({name: 'steve2', planets: [
+var galaxyTwo = new Galaxy({name: 'Omega', planets: [
   new Planet('Bith'),
   new Planet('Corrida'),
   new Planet('Ord_Mantell'),
@@ -792,7 +818,7 @@ var galaxyTwo = new Galaxy({name: 'steve2', planets: [
   new Planet('Kuat')
 ]});
 
-var galaxyThree = new Galaxy({name: 'steve3', planets: [
+var galaxyThree = new Galaxy({name: 'Gamma', planets: [
   new Planet('Cerea'),
   new Planet('Colla_IV'),
   new Planet('Cynestra'),
@@ -814,8 +840,6 @@ var game = new TicTacToe({players: [test1, test2], universe: universe});
 
 
 
-
-
 function computerTurn(gamestate) {
   var randomRow = Math.floor(Math.random()*3);
   var randomCol = Math.floor(Math.random()*3);
@@ -828,7 +852,7 @@ function computerTurn(gamestate) {
 
   var selectorClass = (planetClass + planetRow + planetCol);
 
-  while ( $(selectorClass).data('clicked') === true ) {
+  if ( $(selectorClass).data('clicked') === true ) {
     console.log ('while loop: clicked already!');
     randomRow = Math.floor(Math.random()*3);
     randomCol = Math.floor(Math.random()*3);
@@ -846,7 +870,7 @@ function computerTurn(gamestate) {
 universe.galaxies[randomGalaxy].planets[randomPlanet]
 .gameboard[randomRow][randomCol] = -1
 
-$(selectorClass).css({backgroundColor: gamestate.players[1].color});
+$(selectorClass).css({backgroundColor: gamestate.players[1].color}).data('clicked', true);
 
 universe.galaxies[randomGalaxy].planets[randomPlanet].checkPlanetWinner(gamestate);
 //universe.galaxies[randomGalaxy].planets[randomPlanet].checkGameWinner(gamestate);
@@ -866,6 +890,149 @@ function checkWinner(gamestate) {
     }
 }
 
+function colorTheGalaxy(galaxy, player){
+
+  for (var i = 0; i < galaxy.planets.length; i++) {
+    galaxy.planets[i].colorAllBoxes(gamestate, player);
+  }
+}
+
+
+
+
+function addToScore(galaxy, player) {
+  if ((galaxy.winner === player.name) && (player.galaxiesWon.indexOf(galaxy.name) === -1)){
+    player.galaxiesWon.push(galaxy.name);
+    console.log("Galaxies Won: " + player.galaxiesWon);
+  }
+}
+
+
+function checkGalaxies(game, gamestate, universe) {
+  for (var i = 0; i < universe.galaxies.length; i++) {
+    for (var idx = 0; idx < gamestate.players.length; idx++) {
+    checkGalaxyHorizontalWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
+    checkGalaxyVerticalWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
+    checkGalaxyDiagonalUpWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
+    checkGalaxyDiagonalDownWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
+    gameWinner(game, universe.galaxies[i], gamestate.players[idx])
+      }
+  }
+}
+
+function checkGalaxyHorizontalWinner(gamestate, galaxy, player) {
+      if (
+        (galaxy.planets[0].winner === player.name) &&
+        (galaxy.planets[1].winner === player.name) &&
+        (galaxy.planets[2].winner === player.name)
+      ) {
+        galaxy.winner = player.name;
+        addToScore(galaxy, player);
+        colorTheGalaxy(galaxy, player);
+      } else if (
+      (galaxy.planets[3].winner === player.name) &&
+      (galaxy.planets[4].winner === player.name) &&
+      (galaxy.planets[5].winner === player.name)
+      ){
+        galaxy.winner = player.name;
+        addToScore(galaxy, player);
+        colorTheGalaxy(galaxy, player);
+      } else if (
+      (galaxy.planets[6].winner === player.name) &&
+      (galaxy.planets[7].winner === player.name) &&
+      (galaxy.planets[8].winner === player.name)
+      ){
+        galaxy.winner = player.name;
+        addToScore(galaxy, player);
+        colorTheGalaxy(galaxy, player);
+      } else{
+      }
+  }
+
+
+  function checkGalaxyVerticalWinner(gamestate, galaxy, player) {
+        if (
+          (galaxy.planets[0].winner === player.name) &&
+          (galaxy.planets[3].winner === player.name) &&
+          (galaxy.planets[6].winner === player.name)
+        ) {
+          galaxy.winner = player.name;
+          addToScore(galaxy, player);
+          colorTheGalaxy(galaxy, player);
+          console.log(galaxy.name);
+        } else if (
+        (galaxy.planets[1].winner === player.name) &&
+        (galaxy.planets[4].winner === player.name) &&
+        (galaxy.planets[7].winner === player.name)
+        ){
+          galaxy.winner = player.name;
+          addToScore(galaxy, player);
+          colorTheGalaxy(galaxy, player);
+        } else if (
+        (galaxy.planets[2].winner === player.name) &&
+        (galaxy.planets[5].winner === player.name) &&
+        (galaxy.planets[8].winner === player.name)
+        ){
+          galaxy.winner = player.name;
+          addToScore(galaxy, player);
+          colorTheGalaxy(galaxy, player);
+        } else{
+        }
+    }
+
+    function checkGalaxyDiagonalDownWinner(gamestate, galaxy, player) {
+          if (
+            (galaxy.planets[0].winner === player.name) &&
+            (galaxy.planets[4].winner === player.name) &&
+            (galaxy.planets[8].winner === player.name)
+          ) {
+            galaxy.winner = player.name;
+            addToScore(galaxy, player);
+            colorTheGalaxy(galaxy, player);
+          } else{
+          }
+    }
+
+    function checkGalaxyDiagonalUpWinner(gamestate, galaxy, player) {
+          if (
+            (galaxy.planets[2].winner === player.name) &&
+            (galaxy.planets[4].winner === player.name) &&
+            (galaxy.planets[6].winner === player.name)
+          ) {
+            galaxy.winner = player.name;
+            addToScore(galaxy, player);
+            colorTheGalaxy(galaxy, player);
+          } else{
+          }
+    }
+
+function gameWinner(game, galaxy, player) {
+
+  var planetBoxes = $('.box');
+  testArray = [];
+
+  if (player.galaxiesWon.length === 2) {
+    game.winner = player.name;
+    //gameOver(gamestate);
+  } else {
+
+    for (var i = 0; i < galaxy.planets.length; i++) {
+      testArray.push(galaxy.planets[i].winner);
+    }
+
+    if (testArray.indexOf(null) === -1) {
+        if ((gamestate.players[0].planetsWon.length > gamestate.players[1].planetsWon.length)){
+          game.winner = gamestate.players[0].name;
+          console.log('player one wins');
+        } else if ((gamestate.players[0].planetsWon.length < gamestate.players[1].planetsWon.length)){
+          game.winner = gamestate.players[1].name;
+          console.log('player two wins');
+        }
+    }
+  }
+
+
+}
 
 
 // update with gamestate.player[gamestate.turn].piece

@@ -11,7 +11,7 @@ h1 {
   margin-bottom: -1%;
   margin-left: -1%;
   height: 1.5em;
-  text-align: left;
+  text-align: center;
   width: 100%;
   background: rgba(0,0,0,.5);
   padding-top: 1%;
@@ -120,12 +120,12 @@ h5 {
   text-align: center;
   padding-top: 1%;
   padding-bottom: 1%;
-  border: 1px solid;
-  border-color: rgba(255,215,0,0.7);
-  border-radius: 5px;
+  /*border: 1px solid;
+  border-color: rgba(255,215,0,0.7);*/
+  /*border-radius: 5px;*/
 
   /*background: url('http://scienceblogs.com/startswithabang/files/2013/02/2xcluster.jpg');*/
-  background: rgba(70,130,180,0.2);
+  /*background: rgba(70,130,180,0.2);*/
 
 }
 
@@ -224,7 +224,7 @@ color:white;
 #gamestate-bar {
   height: 7em;
   width: 90%;
-  background: rgba(47,79,79,0.7);
+  background: rgba(0,0,0,0.7);
   text-align: center;
   padding-top: 1em;
   display: block;
