@@ -16,6 +16,7 @@ h1 {
   background: rgba(0,0,0,.5);
   padding-top: 1%;
   padding-left: 3%;
+  border-radius: 5px;
 }
 
 h2 {
@@ -250,7 +251,8 @@ color:white;
 .gameAlert h5{
   color: white;
   font-size: 16px;
-  font-family: 'Black Ops One', cursive;
+  padding: 2px;
+  font-family: 'Nova Square', cursive;
 }
 
 .playerOne {
@@ -331,12 +333,6 @@ color:white;
   padding-top: 10%;
 }
 
-.game-over-message {
-  color: green;
-  width: 60%;
-  font-family: 'Black Ops One', cursive;
-}
-
 .button {
   background: red;
 }
@@ -362,6 +358,46 @@ input #playerOpponent {
   height: 3em;
   background: white;
   color: black;
+}
+
+
+.game-over {
+  float: left;
+  margin-left: auto;
+  margin-right: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.game-over-message {
+  color: green;
+  font-family: 'Nova Square', cursive;
+  /*font-family: 'Black Ops One', sans-serif;*/
+  font-size: 60px;
+}
+
+input {
+  width: 20%;
+  font-size: 2em;
+  font-weight: bold;
+  background: black;
+  border-radius: 5px;
+  padding: 2%;
+  border: 1px green solid;
+  color: green;
+  font-family: 'Black Ops One';
+}
+
+input:hover {
+  background-color: red;
+  color: white;
+  border-color: white;
 }
 
 @media (max-width: 785px) {

@@ -17,8 +17,8 @@ function Player(name, piece, color, type){
   this.winner = false;
 }
 
-var test1 = new Player('Steve', 1, 'blue', 'player');
-var test2 = new Player('Zorrg', -1, 'red', 'computer');
+var test1 = new Player('Commander Anderson', 1, 'blue', 'player');
+var test2 = new Player('Emperor Zorrg', -1, 'red', 'computer');
 
 var players  = [test1, test2];
 
@@ -26,6 +26,7 @@ function Gamestate(players) {
   this.players = players;
   this.turn = 0;
   this.winner = null;
+  this.planetsClaimed = [];
 };
 
 var gamestate = new Gamestate(players);
@@ -193,13 +194,7 @@ Planet.prototype.bindBox = function bindBox(boxNode, gamestate) {
         square.data('clicked', true);
         scope.mapToArray(index[0],index[1], gamestate);
         scope.playerTurn(boxNode, gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
-        computerTurn(gamestate);
+        computerMoves(gamestate);
         //checkWinner(gamestate);
       }
       else {
@@ -300,7 +295,7 @@ Planet.prototype.checkPlanetWinner = function checkPlanetWinner(gamestate){
     }
 }
 
-Planet.prototype.tieCheck = function tieCheck(){
+Planet.prototype.tieCheck = function tieCheck(gamestate){
   var planetClass = ('.' + this.name);
   var planetBoxes = $(planetClass);
   var testArray = [];
@@ -312,6 +307,7 @@ if (this.winner === null) {
 
       if (testArray.indexOf(false) === - 1){
         this.winner = 'tie';
+        gamestate.planetsClaimed.push(this.name);
         for (var i = 0; i < planetBoxes.length; i++) {
           planetBoxes.eq(i).css({
             'backgroundColor': 'grey',
@@ -334,12 +330,13 @@ Planet.prototype.rowChecker = function rowChecker(gamestate){
 
         if  (rowSum === 3) {
           this.winner = gamestate.players[0].name;
+          gamestate.planetsClaimed.push(this.name);
         }
         else if (rowSum === -3) {
           this.winner = gamestate.players[1].name;
+          gamestate.planetsClaimed.push(this.name);
         }
       }
-
   }
 };
 
@@ -352,9 +349,11 @@ Planet.prototype.columnChecker = function columnChecker(gamestate){
         colSum += this.gameboard[r][c];
         if  (colSum === 3) {
           this.winner = gamestate.players[0].name;
+          gamestate.planetsClaimed.push(this.name);
         }
         else if (colSum === -3) {
           this.winner = gamestate.players[1].name;
+          gamestate.planetsClaimed.push(this.name);
         }
       }
 }
@@ -368,9 +367,11 @@ Planet.prototype.diagonalBottomChecker = function diagonalBottomChecker(gamestat
 
   if  (diagonalSum === 3) {
     this.winner = gamestate.players[0].name;
+    gamestate.planetsClaimed.push(this.name);
   }
   else if (diagonalSum === -3) {
     this.winner = gamestate.players[1].name;
+    gamestate.planetsClaimed.push(this.name);
   }
 
 };
@@ -382,9 +383,11 @@ Planet.prototype.diagonalTopChecker = function diagonalTopChecker(gamestate){
       diagonalSum += this.gameboard[i][i];
       if  (diagonalSum === 3) {
         this.winner = gamestate.players[0].name;
+        gamestate.planetsClaimed.push(this.name);
       }
       else if (diagonalSum === -3) {
         this.winner = gamestate.players[1].name;
+        gamestate.planetsClaimed.push(this.name);
       }
     }
 };
@@ -394,7 +397,7 @@ Planet.prototype.generateWinMessage = function generateWinMessage(gamestate){
   var playerOneName = gamestate.players[0].name;
   var playerTwoName = gamestate.players[1].name;
   if (this.winner === gamestate.players[0].name){
-    winMessage = this.name + ' has been claimed by <br> Commander ' + gamestate.players[0].name;
+    winMessage = this.name + ' has been claimed by <br> ' + gamestate.players[0].name;
   } else if (this.winner === gamestate.players[1].name) {
     winMessage = this.name + ' has been claimed by <br>' + gamestate.players[1].name;
   }
@@ -420,107 +423,127 @@ Planet.prototype.generateGameOverMessage = function generateGameOverMessage(game
   var playerTwoName = gamestate.players[1].name;
 
   if (gamestate.winner === gamestate.players[0].name){
-    gameOverMessage = 'Commander' + gamestate.players[0].name + ' wins';
+    gameOverMessage = gamestate.players[0].name + ' wins';
   } else if (gamestate.winner === gamestate.players[1].name) {
     gameOverMessage = gamestate.players[1].name +' wins';
   }
 
   return gameOverMessage;
 };
+//
+// function gameOver(gamestate){
+//   var universe = $('#universe');
+//   var headerTag = $('h1');
+//   var menuBar = $('#gamestate-bar');
+//   headerTag.remove();
+//   universe.remove();
+//   menuBar.remove();
+//   renderGameOverContainer(gamestate)
+//   return $('body');
+// };
 
-function gameOver(gamestate){
-  var universe = $('#universe');
-  var headerTag = $('h1');
-  var menuBar = $('#gamestate-bar');
-  headerTag.remove();
-  universe.remove();
-  menuBar.remove();
-  renderGameOverContainer(gamestate)
-  return $('body');
-};
+function endGame(gamestate) {
+  var gameOverDiv = $('<div>').addClass('game-over');
+  form = replayForm(gamestate);
+  var gameOverMessage = $('<div>').addClass('game-over-message');
+  if (gamestate.winner === 'Tie' || gamestate.winner === null) {
+    gameOverMessage.html("<br /> The fate of the Universe remains contested. <br /> <br />");
+  } else {
+  gameOverMessage.html("<br /> Game Over: <br />" + gamestate.winner + "<br /> has gained control over the Universe. <br /> <br />");
+  }
+  gameOverDiv.append(gameOverMessage, form);
+  $('body').append(gameOverDiv);
+}
+
+function replayForm(gamestate) {
+  var form = $('<form>').attr('action', 'http://www.stevecreswick.com/TicTacToe').attr('method', 'get');
+  var submit = $('<input>').attr('type', 'submit').attr('value', 'replay').addClass('replay');
+  form.append(submit);
+  return form;
+}
 
 
 
 // ---  Game Over Rendering
 
-
-function renderGameOverContainer(gamestate) {
-  var container = $('<div>').attr('id', "game-over-menu-container");
-
-  container.append(renderGameOverMenu(gamestate));
-
-  return $('body').append(container);
-};
-
-function renderGameOverMenu(gamestate) {
-
-    var menu = $('<div>').addClass('game-over-menu');
-    var gameOverBox = renderGameOverBox(gamestate);
-    var button = renderRestartButton();
-    menu.append(gameOverBox, button);
-
-    return menu;
-  };
-
-function renderGameOverBox(gamestate) {
-
-    var gameOverBox = $('<div>').addClass('game-over-box');
-    var gameOverMessage;
-
-    if (gamestate.winner === gamestate.players[0].name){
-      gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br> Commander ' + gamestate.players[0].name + ' wins!');
-      gameOverBox.append(gameOverMessage);
-    }
-    else if (gamestate.winner === gamestate.players[1].name) {
-      gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br>' + gamestate.players[1].name);
-      gameOverBox.append(gameOverMessage);
-    }
-    return gameOverBox;
-  };
-
-
-function renderRestartButton() {
-  var button = $('<button>');
-    button.attr('name', 'restartButton');
-    button.addClass('restart')
-    button.text('Restart');
-    bindRestartButton(button);
-    return button;
-}
-
-function bindRestartButton(button){
-  button.on('click', function(e) {
-    console.log('click');
-    var restart = $(e.target);
-      removeRestartMenu();
-
-      //redeclare gamestate
-
-      gamestate = {
-        active: true,
-        playerOne: 'Default',
-        playerTwo: 'Emperor Zorgg',
-        playerOneColor: 'red',
-        playerTwoColor: 'blue',
-        playerOneMarker: 1,
-        playerTwoMarker: -1,
-        playerOneTurn: true,
-        playerOnePoints: 0,
-        playerTwoPoints: 0,
-        winner: null,
-        computerOpponent: true
-      };
-
-      init();
-
-  });
-}
-
-function removeRestartMenu() {
-  var restartMenu = $('#game-over-menu-container');
-
-  restartMenu.remove();
-}
+//
+// function renderGameOverContainer(gamestate) {
+//   var container = $('<div>').attr('id', "game-over-menu-container");
+//
+//   container.append(renderGameOverMenu(gamestate));
+//
+//   return $('body').append(container);
+// };
+//
+// function renderGameOverMenu(gamestate) {
+//
+//     var menu = $('<div>').addClass('game-over-menu');
+//     var gameOverBox = renderGameOverBox(gamestate);
+//     var button = renderRestartButton();
+//     menu.append(gameOverBox, button);
+//
+//     return menu;
+//   };
+//
+// function renderGameOverBox(gamestate) {
+//
+//     var gameOverBox = $('<div>').addClass('game-over-box');
+//     var gameOverMessage;
+//
+//     if (gamestate.winner === gamestate.players[0].name){
+//       gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br> Commander ' + gamestate.players[0].name + ' wins!');
+//       gameOverBox.append(gameOverMessage);
+//     }
+//     else if (gamestate.winner === gamestate.players[1].name) {
+//       gameOverMessage = $('<h4>').addClass('game-over-message').html('Game Over. <br><br>' + gamestate.players[1].name);
+//       gameOverBox.append(gameOverMessage);
+//     }
+//     return gameOverBox;
+//   };
+//
+//
+// function renderRestartButton() {
+//   var button = $('<button>');
+//     button.attr('name', 'restartButton');
+//     button.addClass('restart')
+//     button.text('Restart');
+//     bindRestartButton(button);
+//     return button;
+// }
+//
+// function bindRestartButton(button){
+//   button.on('click', function(e) {
+//     console.log('click');
+//     var restart = $(e.target);
+//       removeRestartMenu();
+//
+//       //redeclare gamestate
+//
+//       gamestate = {
+//         active: true,
+//         playerOne: 'Default',
+//         playerTwo: 'Emperor Zorgg',
+//         playerOneColor: 'red',
+//         playerTwoColor: 'blue',
+//         playerOneMarker: 1,
+//         playerTwoMarker: -1,
+//         playerOneTurn: true,
+//         playerOnePoints: 0,
+//         playerTwoPoints: 0,
+//         winner: null,
+//         computerOpponent: true
+//       };
+//
+//       init();
+//
+//   });
+// }
+//
+// function removeRestartMenu() {
+//   var restartMenu = $('#game-over-menu-container');
+//
+//   restartMenu.remove();
+// }
 
 
 // --- end of the Planet
@@ -689,7 +712,7 @@ function renderMenuBar(gamestate) {
   menuBar.attr('id', 'gamestate-bar');
   var playerOneInfo = this.renderPlayerOneInfo(gamestate);
   var playerTwoInfo = this.renderPlayerTwoInfo(gamestate);
-  var gameMessage = this.renderGameAlert('First Player to break 67 points wins.');
+  var gameMessage = this.renderGameAlert('Commander.  You must defend the Universe against invasion.');
   menuBar.append(playerOneInfo, gameMessage, playerTwoInfo);
 
   return $('body').append(menuBar);
@@ -717,7 +740,7 @@ function renderPlayerOneName(gamestate) {
   var playerOneNameDiv = $('<div>');
   playerOneNameDiv.addClass('playerOne name');
   var playerOneName = $('<h5>');
-  playerOneName.html('Commander <br>' + gamestate.players[0].name);
+  playerOneName.html(gamestate.players[0].name);
   playerOneNameDiv.append(playerOneName);
 
 return playerOneNameDiv;
@@ -853,29 +876,22 @@ function computerTurn(gamestate) {
   var selectorClass = (planetClass + planetRow + planetCol);
 
   if ( $(selectorClass).data('clicked') === true ) {
-    console.log ('while loop: clicked already!');
-    randomRow = Math.floor(Math.random()*3);
-    randomCol = Math.floor(Math.random()*3);
-    randomGalaxy = Math.floor(Math.random()*3);
-    randomPlanet = Math.floor(Math.random()*9);
-    planetName = universe.galaxies[randomGalaxy].planets[randomPlanet].name
+    console.log ('clicked already!');
+  } else {
+    universe.galaxies[randomGalaxy].planets[randomPlanet]
+    .gameboard[randomRow][randomCol] = -1
 
-    planetClass = ('.' + planetName);
-    planetRow = ('.row' + randomRow);
-    planetCol = ('.col' + randomCol);
+    $(selectorClass).css({backgroundColor: gamestate.players[1].color}).data('clicked', true);
 
-    selectorClass = (planetClass + planetRow + planetCol);
+    universe.galaxies[randomGalaxy].planets[randomPlanet].checkPlanetWinner(gamestate);
   }
-
-universe.galaxies[randomGalaxy].planets[randomPlanet]
-.gameboard[randomRow][randomCol] = -1
-
-$(selectorClass).css({backgroundColor: gamestate.players[1].color}).data('clicked', true);
-
-universe.galaxies[randomGalaxy].planets[randomPlanet].checkPlanetWinner(gamestate);
-//universe.galaxies[randomGalaxy].planets[randomPlanet].checkGameWinner(gamestate);
-
 return gamestate;
+}
+
+function computerMoves(gamestate){
+  for (var i = 0; i < 7; i++) {
+    computerTurn(gamestate);
+  }
 }
 
 function checkWinner(gamestate) {
@@ -898,8 +914,6 @@ function colorTheGalaxy(galaxy, player){
 }
 
 
-
-
 function addToScore(galaxy, player) {
   if ((galaxy.winner === player.name) && (player.galaxiesWon.indexOf(galaxy.name) === -1)){
     player.galaxiesWon.push(galaxy.name);
@@ -915,7 +929,7 @@ function checkGalaxies(game, gamestate, universe) {
     checkGalaxyVerticalWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
     checkGalaxyDiagonalUpWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
     checkGalaxyDiagonalDownWinner(gamestate, universe.galaxies[i], gamestate.players[idx]);
-    gameWinner(game, universe.galaxies[i], gamestate.players[idx])
+    gameWinner(gamestate, universe.galaxies[i], gamestate.players[idx])
       }
   }
 }
@@ -1006,14 +1020,14 @@ function checkGalaxyHorizontalWinner(gamestate, galaxy, player) {
           }
     }
 
-function gameWinner(game, galaxy, player) {
+function gameWinner(gamestate, galaxy, player) {
 
   var planetBoxes = $('.box');
   testArray = [];
 
   if (player.galaxiesWon.length === 2) {
-    game.winner = player.name;
-    //gameOver(gamestate);
+    gamestate.winner = player.name;
+    endGame(gamestate);
   } else {
 
     for (var i = 0; i < galaxy.planets.length; i++) {
@@ -1022,15 +1036,16 @@ function gameWinner(game, galaxy, player) {
 
     if (testArray.indexOf(null) === -1) {
         if ((gamestate.players[0].planetsWon.length > gamestate.players[1].planetsWon.length)){
-          game.winner = gamestate.players[0].name;
-          console.log('player one wins');
+          gamestate.winner = gamestate.players[0].name;
+          endGame(gamestate);
         } else if ((gamestate.players[0].planetsWon.length < gamestate.players[1].planetsWon.length)){
-          game.winner = gamestate.players[1].name;
-          console.log('player two wins');
+          gamestate.winner = gamestate.players[1].name;
+        } else if ((gamestate.players[0].planetsWon.length === gamestate.players[1].planetsWon.length)) {
+          gamestate.winner = 'Tie';
         }
+        endGame(gamestate);
     }
   }
-
 
 }
 
