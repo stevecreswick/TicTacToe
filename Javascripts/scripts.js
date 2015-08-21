@@ -679,7 +679,7 @@ function TicTacToe(options){
 
 
     TicTacToe.prototype.appendGameName = function appendGameName(){
-      var gameName = $('<h1>').text('Space Tic Tac Toe').addClass('animated fadeInDownBig');
+      var gameName = $('<h1>').text('Intergalactic Tic Tac Toe').addClass('animated fadeInDownBig');
       return $('body').append(gameName);
     };
 
